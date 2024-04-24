@@ -11,6 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^4.26.2"
+    "dotenv": "^16.4.5",
+    "fastify": "^4.26.2",
+    "mongodb": "^6.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7"
   }
 }
