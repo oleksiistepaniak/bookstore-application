@@ -6,11 +6,9 @@ import {AppDb} from "./db/AppDb";
 export const app = fastify({
     logger: true,
 });
-
 dotenv.config();
-
-export const appConf = new AppConf();
-export const appDb = new AppDb();
+AppConf.instance;
+const appDb = AppDb.instance;
 
 app.get('/', async (_request, _reply) => {
     return {

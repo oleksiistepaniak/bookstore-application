@@ -1,35 +1,43 @@
 import {app} from "../index";
 
 export class AppConf {
-    private readonly DB_URL: string;
-    private readonly JWT_SECRET: string;
-    private readonly JWT_EXPIRE: string;
-    private readonly SALT: number;
+    private static _instance: AppConf;
+    private readonly _DB_URL: string;
+    private readonly _JWT_SECRET: string;
+    private readonly _JWT_EXPIRE: string;
+    private readonly _SALT: number;
 
-    constructor() {
-        this.DB_URL = String(process.env.DB_URL);
-        this.JWT_SECRET = String(process.env.JWT_SECRET);
-        this.JWT_EXPIRE = String(process.env.JWT_EXPIRE);
-        this.SALT = parseInt(String(process.env.SALT));
-        app.log.info(`DB_URL: ${this.DB_URL}`);
-        app.log.info(`JWT_SECRET: ${this.JWT_SECRET}`);
-        app.log.info(`JWT_EXPIRE: ${this.JWT_EXPIRE}`);
-        app.log.info(`SALT: ${this.SALT}`);
+    private constructor() {
+        this._DB_URL = String(process.env.DB_URL);
+        this._JWT_SECRET = String(process.env.JWT_SECRET);
+        this._JWT_EXPIRE = String(process.env.JWT_EXPIRE);
+        this._SALT = parseInt(String(process.env.SALT));
+        app.log.info(`DB_URL: ${this._DB_URL}`);
+        app.log.info(`JWT_SECRET: ${this._JWT_SECRET}`);
+        app.log.info(`JWT_EXPIRE: ${this._JWT_EXPIRE}`);
+        app.log.info(`SALT: ${this._SALT}`);
     }
 
-    get db_url(): string {
-        return this.DB_URL;
+    public static get instance(): AppConf {
+        if (!this._instance) {
+            this._instance = new AppConf();
+        }
+        return this._instance;
     }
 
-    get jwt_secret(): string {
-        return this.JWT_SECRET;
+    get DB_URL(): string {
+        return this._DB_URL;
     }
 
-    get jwt_expire(): string {
-        return this.JWT_EXPIRE;
+    get JWT_SECRET(): string {
+        return this._JWT_SECRET;
     }
 
-    get salt(): number {
-        return this.SALT;
+    get JWT_EXPIRE(): string {
+        return this._JWT_EXPIRE;
+    }
+
+    get SALT(): number {
+        return this._SALT;
     }
 }

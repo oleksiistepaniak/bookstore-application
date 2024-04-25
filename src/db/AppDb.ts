@@ -1,21 +1,35 @@
 import {ClientSession, Collection, Db, MongoClient} from "mongodb";
 import {UserRecord} from "./interfaces";
-import {app, appConf} from "../index";
+import {app} from "../index";
+import {AppConf} from "../config/AppConf";
+import {ApiMessages} from "../util/ApiMessages";
 
 export class AppDb {
-    private readonly client: MongoClient;
-    private readonly db: Db;
-    private readonly usersCollection: Collection<UserRecord>;
+    private static _instance: AppDb;
+    private readonly _client: MongoClient;
+    private readonly _db: Db;
+    private readonly _usersCollection: Collection<UserRecord>;
 
-    constructor() {
-        this.client = new MongoClient(appConf.db_url);
-        this.db = this.client.db();
-        this.usersCollection = this.db.collection("users");
+    private constructor() {
+        this._client = new MongoClient(AppConf.instance.DB_URL);
+        this._db = this._client.db();
+        this._usersCollection = this._db.collection("users");
+    }
+
+    public static get instance(): AppDb {
+        if (!AppDb._instance) {
+            this._instance = new AppDb();
+        }
+        return AppDb._instance;
+    }
+
+    get usersCollection(): Collection<UserRecord> {
+        return this._usersCollection;
     }
 
     async withTransaction(callback: (session: ClientSession) => Promise<any>): Promise<any>
     {
-        return this.client.withSession(async (session) => {
+        return this._client.withSession(async (session) => {
             return session.withTransaction(async (transactionalSession) => {
                 return await callback(transactionalSession);
             });
@@ -24,13 +38,13 @@ export class AppDb {
 
     async initializeDatabase() {
         try {
-            app.log.info(`Connecting to Mongo to URL: ${appConf.db_url}`);
-            await this.client.connect();
-            await this.usersCollection.createIndex({email: 1}, {unique: true});
-            app.log.info(`Connection with Mongo DB successfully established! URL: ${appConf.db_url}`);
+            app.log.info(`Connecting to Mongo to URL: ${AppConf.instance.DB_URL}`);
+            await this._client.connect();
+            await this._usersCollection.createIndex({email: 1}, {unique: true});
+            app.log.info(`Connection with Mongo DB successfully established! URL: ${AppConf.instance.DB_URL}`);
         } catch (error) {
             app.log.error(`Attempt to connect to Mongo DB failed!`, error);
-            throw error;
+            throw new Error(ApiMessages.MONGO_CONNECTION_FAILED);
         }
     }
 }
