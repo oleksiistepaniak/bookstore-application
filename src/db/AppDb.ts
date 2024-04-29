@@ -17,10 +17,10 @@ export class AppDb {
     }
 
     public static get instance(): AppDb {
-        if (!AppDb._instance) {
+        if (!this._instance) {
             this._instance = new AppDb();
         }
-        return AppDb._instance;
+        return this._instance;
     }
 
     get usersCollection(): Collection<UserRecord> {

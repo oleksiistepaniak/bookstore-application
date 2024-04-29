@@ -8,7 +8,7 @@ export class UserRepository {
     private constructor() {
     }
 
-    static get instance() {
+    public static get instance() {
         if (!this._instance) {
             this._instance = new UserRepository();
         }
