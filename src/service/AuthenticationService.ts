@@ -6,6 +6,7 @@ import {AppConf} from "../config/AppConf";
 import {UserRepository} from "../repository/UserRepository";
 import {ApiError} from "../error/ApiError";
 import {ApiMessages} from "../util/ApiMessages";
+import {Constants} from "../constants";
 
 export class AuthenticationService {
     private static _instance: AuthenticationService;
@@ -30,7 +31,8 @@ export class AuthenticationService {
             return userModel.mapToDto();
         } catch (error) {
             const errorMessage = error as ApiError;
-            if (errorMessage.message.includes('E11000') || errorMessage.message.includes('duplicate key')) {
+            if (errorMessage.message.includes(Constants.USER.E11000_MESSAGE) ||
+                errorMessage.message.includes(Constants.USER.DUPLICATE_KEY_MESSAGE)) {
                 throw new ApiError(ApiMessages.USER.USER_EXISTS);
             }
         }

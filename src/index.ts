@@ -1,6 +1,5 @@
 import fastify from 'fastify';
 import dotenv from 'dotenv';
-import {AppConf} from "./config/AppConf";
 import {AppDb} from "./db/AppDb";
 import authenticationRoutes from "./routes/UserRoutes";
 
@@ -8,21 +7,19 @@ export const app = fastify({
     logger: true,
 });
 dotenv.config();
-AppConf.instance;
-const appDb = AppDb.instance;
 
 app.register(authenticationRoutes);
 
-app.get('/', async (_request, _reply) => {
+app.get('/health', async (_request, _reply) => {
     return {
-        message: 'Hello world!',
+        message: 'Everything is working!',
     }
 });
 
 async function main() {
     try {
         await app.listen({port: 3000});
-        await appDb.initializeDatabase();
+        await AppDb.instance.initializeDatabase();
     } catch (error) {
         app.log.error(error);
     }
