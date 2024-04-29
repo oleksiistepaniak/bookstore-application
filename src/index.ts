@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import dotenv from 'dotenv';
 import {AppConf} from "./config/AppConf";
 import {AppDb} from "./db/AppDb";
+import authenticationRoutes from "./routes/UserRoutes";
 
 export const app = fastify({
     logger: true,
@@ -9,6 +10,8 @@ export const app = fastify({
 dotenv.config();
 AppConf.instance;
 const appDb = AppDb.instance;
+
+app.register(authenticationRoutes);
 
 app.get('/', async (_request, _reply) => {
     return {

@@ -1,7 +1,4 @@
-import {ObjectId} from "mongodb";
-
-export interface UserRecord {
-    _id: ObjectId;
+export interface CreateUserDto {
     email: string;
     password: string;
     firstName: string;
