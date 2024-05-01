@@ -4,18 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node dist/src/index.js",
+    "test": "set IS_TEST=true&& mocha -r ts-node/register test/**/*.test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/mocha": "^10.0.6",
+    "@types/supertest": "^6.0.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
-    "mongodb": "^6.5.0"
+    "mocha": "^10.4.0",
+    "mongodb": "^6.5.0",
+    "should": "^13.2.3",
+    "supertest": "^7.0.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/node": "^20.12.7"
