@@ -10,6 +10,7 @@ describe('reg.test', () => {
 
     before(async () => {
         app = await init();
+        await clearUsers();
     });
 
     after(async () => {

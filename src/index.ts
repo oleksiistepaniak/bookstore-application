@@ -22,7 +22,7 @@ app.get('/health', async (_request, _reply) => {
     }
 });
 
-export async function main() {
+async function main() {
     try {
         await app.listen({port: AppConf.instance.APP_PORT});
         await AppDb.instance.initializeDatabase();

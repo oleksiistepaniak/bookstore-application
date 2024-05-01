@@ -1,6 +1,6 @@
 import {FastifyInstance} from "fastify";
 import {CreateUserDto} from "../src/dto/user/CreateUserDto";
-import {app, main} from "../src";
+import {app} from "../src";
 import dotenv from "dotenv";
 import {AppDb} from "../src/db/AppDb";
 import {UserModel} from "../src/model/UserModel";
@@ -26,7 +26,6 @@ export const validAuthenticationDto: AuthenticationDto = {
 export async function init(): Promise<FastifyInstance> {
     test_app = app;
     dotenv.config({ path: ".test.env" });
-    await main();
     return test_app;
 }
 
@@ -44,10 +43,10 @@ export async function setUser(userModel: UserModel): Promise<void> {
 
 export async function dispose(): Promise<void> {
     try {
-        await app.close();
-        app.log.info('Server has been successfully disposed!');
+        test_app.server.close();
+        test_app.log.info('Server has been successfully disposed!');
     } catch (error) {
-        app.log.error('An error occurred during disposing a server!');
+        test_app.log.error('An error occurred during disposing a server!');
         throw error;
     }
 }
