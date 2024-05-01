@@ -7,6 +7,8 @@ import {AuthenticationService} from "../service/AuthenticationService";
 import {AppDb} from "../db/AppDb";
 import {UserReplyDto} from "../dto/user/UserReplyDto";
 import {ApiError} from "../error/ApiError";
+import {AuthenticationDto} from "../dto/user/AuthenticationDto";
+import {TokenReplyDto} from "../dto/user/TokenReplyDto";
 
 export class AuthenticationController {
     private static _instance: AuthenticationController;
@@ -39,8 +41,7 @@ export class AuthenticationController {
             check(age >= Constants.USER.MIN_AGE_VALUE &&
                 age <= Constants.USER.MAX_AGE_VALUE, ApiMessages.USER.INVALID_AGE);
 
-            let dto: UserReplyDto;
-            dto = await AppDb.instance.withTransaction((session) => {
+            const dto: UserReplyDto = await AppDb.instance.withTransaction((session) => {
                 return AuthenticationService.instance.signup(session, request.body);
             });
 
@@ -48,6 +49,26 @@ export class AuthenticationController {
         } catch (error) {
             const apiError = error as ApiError;
             reply.status(400).send({
+                message: apiError.message,
+            });
+        }
+    }
+
+    async signin(request: FastifyRequest<{ Body: AuthenticationDto }>, reply: FastifyReply) {
+        try {
+            const { email, password } = request.body;
+
+            isString(email, ApiMessages.USER.EMAIL_NOT_STRING);
+            isString(password, ApiMessages.USER.PASSWORD_NOT_STRING);
+
+            const dto: TokenReplyDto = await AppDb.instance.withTransaction((session) => {
+                return AuthenticationService.instance.signin(session, request.body);
+            });
+
+            reply.status(200).send(dto);
+        } catch (error) {
+            const apiError = error as ApiError;
+            reply.status(401).send({
                 message: apiError.message,
             });
         }

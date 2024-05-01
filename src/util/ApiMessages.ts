@@ -12,5 +12,6 @@ export const ApiMessages = {
         INVALID_LASTNAME: "invalid_lastname",
         INVALID_AGE: "invalid_age",
         USER_EXISTS: "user_exists",
+        INVALID_PASSWORD_OR_EMAIL: "invalid_password_or_email",
     }
 }

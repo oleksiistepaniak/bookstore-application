@@ -24,6 +24,10 @@ export class UserModel {
         return this._data.email;
     }
 
+    get password(): string {
+        return this._data.password;
+    }
+
     get firstName(): string {
         return this._data.firstName;
     }

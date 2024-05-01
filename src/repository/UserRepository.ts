@@ -19,4 +19,9 @@ export class UserRepository {
         await AppDb.instance.usersCollection.insertOne(user.data, {session});
     }
 
+    async findUserByEmail(session: ClientSession, email: string): Promise<UserModel | null> {
+        const user = await AppDb.instance.usersCollection.findOne({email}, {session});
+        return user ? new UserModel(user) : null;
+    }
+
 }
