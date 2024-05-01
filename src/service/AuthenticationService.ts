@@ -10,6 +10,7 @@ import {Constants} from "../constants";
 import {AuthenticationDto} from "../dto/user/AuthenticationDto";
 import jwt from "jsonwebtoken";
 import {TokenReplyDto} from "../dto/user/TokenReplyDto";
+import {UserReplyDto} from "../dto/user/UserReplyDto";
 
 export class AuthenticationService {
     private static _instance: AuthenticationService;
@@ -24,7 +25,7 @@ export class AuthenticationService {
         return this._instance;
     }
 
-    async signup(session: ClientSession, userParams: CreateUserDto) {
+    async signup(session: ClientSession, userParams: CreateUserDto): Promise<UserReplyDto> {
         const conf = AppConf.instance;
         const userRepo = UserRepository.instance;
 
@@ -34,7 +35,6 @@ export class AuthenticationService {
         const userModel = UserModel.create(userParams);
         try {
             await userRepo.createUser(session, userModel);
-            return userModel.mapToDto();
         } catch (error) {
             const errorMessage = error as ApiError;
             if (errorMessage.message.includes(Constants.USER.E11000_MESSAGE) ||
@@ -42,6 +42,7 @@ export class AuthenticationService {
                 throw new ApiError(ApiMessages.USER.USER_EXISTS);
             }
         }
+        return userModel.mapToDto();
     }
 
     async signin(session: ClientSession, userParams: AuthenticationDto): Promise<TokenReplyDto> {

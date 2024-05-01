@@ -23,5 +23,4 @@ export class UserRepository {
         const user = await AppDb.instance.usersCollection.findOne({email}, {session});
         return user ? new UserModel(user) : null;
     }
-
 }

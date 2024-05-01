@@ -44,9 +44,9 @@ export async function setUser(userModel: UserModel): Promise<void> {
 export async function dispose(): Promise<void> {
     try {
         test_app.server.close();
-        test_app.log.info('Server has been successfully disposed!');
+        test_app.log.info("Server has been successfully disposed!");
     } catch (error) {
-        test_app.log.error('An error occurred during disposing a server!');
+        test_app.log.error("An error occurred during disposing a server!");
         throw error;
     }
 }

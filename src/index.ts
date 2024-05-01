@@ -1,5 +1,5 @@
-import fastify from 'fastify';
-import dotenv from 'dotenv';
+import fastify from "fastify";
+import dotenv from "dotenv";
 import {AppDb} from "./db/AppDb";
 import authenticationRoutes from "./routes/UserRoutes";
 import {AppConf} from "./config/AppConf";
@@ -17,7 +17,7 @@ if (process.env.IS_TEST) {
 
 app.register(authenticationRoutes);
 
-app.get('/health', async (_request, _reply) => {
+app.get("/health", async (_request, _reply) => {
     return {
         message: Constants.HEALTH_MESSAGE,
     }

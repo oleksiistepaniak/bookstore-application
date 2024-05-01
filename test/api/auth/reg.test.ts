@@ -5,7 +5,7 @@ import should from "should";
 import {Constants} from "../../../src/constants";
 import {UserModel} from "../../../src/model/UserModel";
 
-describe('reg.test', () => {
+describe("reg.test", () => {
     let app: FastifyInstance;
 
     before(async () => {
