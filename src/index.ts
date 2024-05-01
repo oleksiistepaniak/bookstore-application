@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import {AppDb} from "./db/AppDb";
 import authenticationRoutes from "./routes/UserRoutes";
 import {AppConf} from "./config/AppConf";
+import {Constants} from "./constants";
 
 export const app = fastify({
     logger: true,
@@ -18,7 +19,7 @@ app.register(authenticationRoutes);
 
 app.get('/health', async (_request, _reply) => {
     return {
-        message: 'Everything is working!',
+        message: Constants.HEALTH_MESSAGE,
     }
 });
 

@@ -2,6 +2,7 @@ import request from "supertest";
 import {FastifyInstance} from "fastify";
 import {dispose, init} from "../../TestHelper";
 import should from "should";
+import {Constants} from "../../../src/constants";
 
 describe("health.test", () => {
     let app: FastifyInstance;
@@ -21,7 +22,7 @@ describe("health.test", () => {
             .expect(200);
 
         should(reply.body).deepEqual({
-            message: "Everything is working!",
+            message: Constants.HEALTH_MESSAGE,
         });
         should(reply.status).deepEqual(200);
     })
