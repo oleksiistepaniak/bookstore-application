@@ -1,7 +1,6 @@
 import {FastifyInstance} from "fastify";
 import {CreateUserDto} from "../src/dto/user/CreateUserDto";
 import {app} from "../src";
-import dotenv from "dotenv";
 import {AppDb} from "../src/db/AppDb";
 import {UserModel} from "../src/model/UserModel";
 import {AuthenticationDto} from "../src/dto/user/AuthenticationDto";
@@ -25,7 +24,6 @@ export const validAuthenticationDto: AuthenticationDto = {
 
 export async function init(): Promise<FastifyInstance> {
     test_app = app;
-    dotenv.config({ path: ".test.env" });
     return test_app;
 }
 
