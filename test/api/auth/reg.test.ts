@@ -22,15 +22,15 @@ describe('reg.test', () => {
             ...validCreateUserDto,
             email: "",
         }
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_email",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("null email", async () => {
@@ -40,15 +40,15 @@ describe('reg.test', () => {
             email: null,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "email_not_string",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("invalid email", async () => {
@@ -58,15 +58,15 @@ describe('reg.test', () => {
            email: "invalid_email",
        };
 
-       const response = await request(server)
+       const reply = await request(server)
            .post("/api/signup")
            .send(dto)
            .expect(400);
 
-       should(response.body).deepEqual({
+       should(reply.body).deepEqual({
            message: "invalid_email",
        });
-       should(response.status).deepEqual(400);
+       should(reply.status).deepEqual(400);
     });
 
     it("empty password", async () => {
@@ -76,15 +76,15 @@ describe('reg.test', () => {
             password: "",
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("null password", async () => {
@@ -94,15 +94,15 @@ describe('reg.test', () => {
             password: null,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "password_not_string",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("password is less than min required symbols", async () => {
@@ -113,15 +113,15 @@ describe('reg.test', () => {
            password,
        };
 
-       const response = await request(server)
+       const reply = await request(server)
            .post("/api/signup")
            .send(dto)
            .expect(400);
 
-       should(response.body).deepEqual({
+       should(reply.body).deepEqual({
            message: "invalid_password",
        });
-       should(response.status).deepEqual(400);
+       should(reply.status).deepEqual(400);
     });
 
     it("password is more than max required symbols", async () => {
@@ -132,15 +132,15 @@ describe('reg.test', () => {
            password,
        };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("only lowercase password", async () => {
@@ -151,15 +151,15 @@ describe('reg.test', () => {
             password,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("only uppercase password", async () => {
@@ -170,15 +170,15 @@ describe('reg.test', () => {
             password,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("only digits password", async () => {
@@ -189,15 +189,15 @@ describe('reg.test', () => {
             password,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("only digits and lowercase password", async () => {
@@ -208,15 +208,15 @@ describe('reg.test', () => {
             password,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("only digits and uppercase password", async () => {
@@ -227,15 +227,15 @@ describe('reg.test', () => {
             password,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("only lowercase and uppercase password", async () => {
@@ -246,15 +246,15 @@ describe('reg.test', () => {
             password,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_password",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("empty first name", async () => {
@@ -264,15 +264,15 @@ describe('reg.test', () => {
             firstName: "",
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_firstname",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("null first name", async () => {
@@ -282,15 +282,15 @@ describe('reg.test', () => {
             firstName: null,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "firstname_not_string",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("first name is less than min required symbols", async () => {
@@ -301,15 +301,15 @@ describe('reg.test', () => {
             firstName,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_firstname",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("first name is more than max required symbols", async () => {
@@ -320,15 +320,15 @@ describe('reg.test', () => {
             firstName,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_firstname",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("empty last name", async () => {
@@ -338,15 +338,15 @@ describe('reg.test', () => {
             lastName: "",
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_lastname",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("null last name", async () => {
@@ -356,15 +356,15 @@ describe('reg.test', () => {
             lastName: null,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "lastname_not_string",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("last name is less than min required symbols", async () => {
@@ -375,15 +375,15 @@ describe('reg.test', () => {
             lastName,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_lastname",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("last name is more than max required symbols", async () => {
@@ -394,15 +394,15 @@ describe('reg.test', () => {
             lastName,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_lastname",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("null age", async () => {
@@ -412,15 +412,15 @@ describe('reg.test', () => {
             age: null,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "age_not_number",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("age is less than min required", async () => {
@@ -431,15 +431,15 @@ describe('reg.test', () => {
             age,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_age",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("age is more than max required", async () => {
@@ -450,15 +450,15 @@ describe('reg.test', () => {
             age,
         };
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(dto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "invalid_age",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
     });
 
     it("user exists", async () => {
@@ -466,34 +466,34 @@ describe('reg.test', () => {
         await setUser(user);
         const server = app.server;
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(validCreateUserDto)
             .expect(400);
 
-        should(response.body).deepEqual({
+        should(reply.body).deepEqual({
             message: "user_exists",
         });
-        should(response.status).deepEqual(400);
+        should(reply.status).deepEqual(400);
         await clearUsers();
     });
 
     it("success", async () => {
         const server = app.server;
 
-        const response = await request(server)
+        const reply = await request(server)
             .post("/api/signup")
             .send(validCreateUserDto)
             .expect(200);
 
-        should(response.body).deepEqual({
-            id: response.body.id,
+        should(reply.body).deepEqual({
+            id: reply.body.id,
             email: validCreateUserDto.email,
             firstName: validCreateUserDto.firstName,
             lastName: validCreateUserDto.lastName,
             age: validCreateUserDto.age,
         });
-        should(response.status).deepEqual(200);
+        should(reply.status).deepEqual(200);
         await clearUsers();
     });
 });
