@@ -11,5 +11,5 @@ export const Constants = {
         MAX_NAME_LENGTH: 30,
         MIN_AGE_VALUE: 6,
         MAX_AGE_VALUE: 130,
-    }
+    },
 }

@@ -13,5 +13,9 @@ export const ApiMessages = {
         INVALID_AGE: "invalid_age",
         USER_EXISTS: "user_exists",
         INVALID_PASSWORD_OR_EMAIL: "invalid_password_or_email",
+    },
+    AUTH_MIDDLEWARE: {
+        TOKEN_NOT_PROVIDED: "token_not_provided",
+        INVALID_TOKEN: "invalid_token",
     }
 }
