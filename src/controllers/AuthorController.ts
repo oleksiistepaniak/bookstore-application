@@ -31,6 +31,8 @@ export class AuthorController {
                 && name.length <= Constants.AUTHOR.MAX_NAME_LENGTH, ApiMessages.AUTHOR.INVALID_NAME_LENGTH);
             check(surname.length >= Constants.AUTHOR.MIN_SURNAME_LENGTH
                 && surname.length <= Constants.AUTHOR.MAX_SURNAME_LENGTH, ApiMessages.AUTHOR.INVALID_SURNAME_LENGTH);
+            check(Constants.LATIN_ONLY_REGEXP.test(name), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_NAME);
+            check(Constants.LATIN_ONLY_REGEXP.test(surname), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_SURNAME);
 
             const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
                 return AuthorService.instance.createAuthor(session, request.body);

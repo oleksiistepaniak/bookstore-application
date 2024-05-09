@@ -132,6 +132,44 @@ describe("create.author.test", () => {
         should(reply.status).deepEqual(400);
     });
 
+    it("name not latin chars", async () => {
+        const server = app.server;
+        const name = "1".repeat(Constants.AUTHOR.MIN_NAME_LENGTH);
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                name,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_NAME,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("invalid name chars", async () => {
+        const server = app.server;
+        const name = "+".repeat(Constants.AUTHOR.MIN_NAME_LENGTH);
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                name,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_NAME,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
     it("surname not string", async () => {
         const server = app.server;
 
@@ -202,6 +240,44 @@ describe("create.author.test", () => {
 
         should(reply.body).deepEqual({
             message: ApiMessages.AUTHOR.INVALID_SURNAME_LENGTH,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("surname not latin chars", async () => {
+        const server = app.server;
+        const surname = "1".repeat(Constants.AUTHOR.MIN_SURNAME_LENGTH);
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                surname,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_SURNAME,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("invalid surname chars", async () => {
+        const server = app.server;
+        const surname = "+".repeat(Constants.AUTHOR.MIN_SURNAME_LENGTH);
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                surname,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_SURNAME,
         });
         should(reply.status).deepEqual(400);
     });

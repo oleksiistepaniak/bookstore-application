@@ -19,6 +19,8 @@ export const ApiMessages = {
         SURNAME_NOT_STRING: "surname_not_string",
         INVALID_NAME_LENGTH: "invalid_name_length",
         INVALID_SURNAME_LENGTH: "invalid_surname_length",
+        ONLY_LATIN_CHARS_FOR_NAME: "only_latin_chars_for_name",
+        ONLY_LATIN_CHARS_FOR_SURNAME: "only_latin_chars_for_surname",
         CANNOT_CREATE_AUTHOR: "cannot_create_author",
     },
     AUTH_MIDDLEWARE: {
