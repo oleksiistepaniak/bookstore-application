@@ -6,6 +6,10 @@ import {UserModel} from "../src/model/UserModel";
 import {AuthenticationDto} from "../src/dto/user/AuthenticationDto";
 import bcrypt from "bcryptjs";
 import {AppConf} from "../src/config/AppConf";
+import {TokenReplyDto} from "../src/dto/user/TokenReplyDto";
+import {AuthenticationService} from "../src/service/AuthenticationService";
+import {Constants} from "../src/constants";
+import {CreateAuthorDto} from "../src/dto/author/CreateAuthorDto";
 
 let test_app: FastifyInstance;
 
@@ -22,9 +26,19 @@ export const validAuthenticationDto: AuthenticationDto = {
     password: "alexALEX228",
 };
 
+export const validCreateAuthorDto: CreateAuthorDto = {
+    name: "Petro",
+    surname: "Mostavchuk",
+};
+
 export async function init(): Promise<FastifyInstance> {
     test_app = app;
     return test_app;
+}
+
+export async function getValidToken(): Promise<TokenReplyDto> {
+    const replyDto = await AuthenticationService.instance.signin(Constants.NO_SESSION, validAuthenticationDto);
+    return replyDto;
 }
 
 export async function clearUsers(): Promise<void> {

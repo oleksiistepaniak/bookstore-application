@@ -14,6 +14,13 @@ export const ApiMessages = {
         USER_EXISTS: "user_exists",
         INVALID_PASSWORD_OR_EMAIL: "invalid_password_or_email",
     },
+    AUTHOR: {
+        NAME_NOT_STRING: "name_not_string",
+        SURNAME_NOT_STRING: "surname_not_string",
+        INVALID_NAME_LENGTH: "invalid_name_length",
+        INVALID_SURNAME_LENGTH: "invalid_surname_length",
+        CANNOT_CREATE_AUTHOR: "cannot_create_author",
+    },
     AUTH_MIDDLEWARE: {
         TOKEN_NOT_PROVIDED: "token_not_provided",
         INVALID_TOKEN: "invalid_token",

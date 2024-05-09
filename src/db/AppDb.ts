@@ -1,5 +1,5 @@
 import {ClientSession, Collection, Db, MongoClient} from "mongodb";
-import {UserRecord} from "./interfaces";
+import {AuthorRecord, UserRecord} from "./interfaces";
 import {app} from "../index";
 import {AppConf} from "../config/AppConf";
 import {ApiMessages} from "../util/ApiMessages";
@@ -9,11 +9,13 @@ export class AppDb {
     private readonly _client: MongoClient;
     private readonly _db: Db;
     private readonly _usersCollection: Collection<UserRecord>;
+    private readonly _authorsCollection: Collection<AuthorRecord>;
 
     private constructor() {
         this._client = new MongoClient(AppConf.instance.DB_URL);
         this._db = this._client.db();
         this._usersCollection = this._db.collection("users");
+        this._authorsCollection = this._db.collection("authors");
     }
 
     public static get instance(): AppDb {
@@ -25,6 +27,10 @@ export class AppDb {
 
     get usersCollection(): Collection<UserRecord> {
         return this._usersCollection;
+    }
+
+    get authorsCollection(): Collection<AuthorRecord> {
+        return this._authorsCollection;
     }
 
     async withTransaction(callback: (session: ClientSession) => Promise<any>): Promise<any>

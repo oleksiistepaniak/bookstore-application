@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import {AppConf} from "../config/AppConf";
 import {TUserRequest} from "../interfaces";
 
-export const authenticationMiddleware = (request: TUserRequest, reply: FastifyReply) => {
+export const authenticationMiddleware = (request: TUserRequest, reply: FastifyReply, next: (error?: Error) => void) => {
     const conf = AppConf.instance;
     if (!request.headers.authorization) {
         reply.status(401).send({
@@ -18,6 +18,7 @@ export const authenticationMiddleware = (request: TUserRequest, reply: FastifyRe
     try {
         const decoded = jwt.verify(token, conf.JWT_SECRET);
         request.user = {id: decoded.toString()};
+        next();
     } catch (error) {
         reply.status(401).send({
             message: ApiMessages.AUTH_MIDDLEWARE.INVALID_TOKEN,
