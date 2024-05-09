@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import {TBookCategory} from "../interfaces";
+import {EBookCategory, ENationality} from "../interfaces";
 
 export interface UserRecord {
     _id: ObjectId;
@@ -14,6 +14,8 @@ export interface AuthorRecord {
     _id: ObjectId;
     name: string;
     surname: string;
+    nationality: ENationality;
+    biography: string;
 }
 
 export interface BookRecord {
@@ -21,6 +23,6 @@ export interface BookRecord {
     title: string;
     description: string;
     numberOfPages: number;
-    category: TBookCategory;
+    category: EBookCategory;
     authorsId: ObjectId[];
 }

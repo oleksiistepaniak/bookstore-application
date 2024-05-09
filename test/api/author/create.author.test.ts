@@ -282,6 +282,116 @@ describe("create.author.test", () => {
         should(reply.status).deepEqual(400);
     });
 
+    it("biography not string", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                biography: null,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.BIOGRAPHY_NOT_STRING,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("empty biography", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                biography: "",
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.INVALID_BIOGRAPHY_LENGTH,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("biography less than min required symbols", async () => {
+        const server = app.server;
+        const biography = "a".repeat(Constants.AUTHOR.MIN_BIOGRAPHY_LENGTH - 1);
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                biography,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.INVALID_BIOGRAPHY_LENGTH,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("biography more than max required symbols", async () => {
+        const server = app.server;
+        const biography = "a".repeat(Constants.AUTHOR.MAX_BIOGRAPHY_LENGTH + 1);
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                biography,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.INVALID_BIOGRAPHY_LENGTH,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("nationality not string", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                nationality: null,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.NATIONALITY_NOT_STRING,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("invalid nationality", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/create")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                ...validCreateAuthorDto,
+                nationality: "invalid_nationality",
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.INVALID_NATIONALITY,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
     it("success", async () => {
        const server = app.server;
 

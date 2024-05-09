@@ -17,10 +17,15 @@ export const ApiMessages = {
     AUTHOR: {
         NAME_NOT_STRING: "name_not_string",
         SURNAME_NOT_STRING: "surname_not_string",
+        NATIONALITY_NOT_STRING: "nationality_not_string",
+        BIOGRAPHY_NOT_STRING: "biography_not_string",
         INVALID_NAME_LENGTH: "invalid_name_length",
         INVALID_SURNAME_LENGTH: "invalid_surname_length",
+        INVALID_BIOGRAPHY_LENGTH: "invalid_biography_length",
         ONLY_LATIN_CHARS_FOR_NAME: "only_latin_chars_for_name",
         ONLY_LATIN_CHARS_FOR_SURNAME: "only_latin_chars_for_surname",
+        ONLY_LATIN_CHARS_FOR_BIOGRAPHY: "only_latin_chars_for_biography",
+        INVALID_NATIONALITY: "invalid_nationality",
         CANNOT_CREATE_AUTHOR: "cannot_create_author",
     },
     AUTH_MIDDLEWARE: {

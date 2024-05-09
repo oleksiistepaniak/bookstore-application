@@ -10,6 +10,7 @@ import {TokenReplyDto} from "../src/dto/user/TokenReplyDto";
 import {AuthenticationService} from "../src/service/AuthenticationService";
 import {Constants} from "../src/constants";
 import {CreateAuthorDto} from "../src/dto/author/CreateAuthorDto";
+import {ENationality} from "../src/interfaces";
 
 let test_app: FastifyInstance;
 
@@ -29,6 +30,15 @@ export const validAuthenticationDto: AuthenticationDto = {
 export const validCreateAuthorDto: CreateAuthorDto = {
     name: "Petro",
     surname: "Mostavchuk",
+    nationality: ENationality.Ukrainian.toString(),
+    biography: "Petro Mostavchuk is a Ukrainian author known for his captivating storytelling and profound insights" +
+        " into the human condition. Born and raised in the picturesque Carpathian Mountains," +
+        " Petro draws inspiration from the rich cultural heritage and natural beauty of his homeland." +
+        " With a keen eye for detail and a deep understanding of the complexities of life, " +
+        "Petro weaves tales that resonate with readers from all walks of life. His works explore themes of love," +
+        " loss, resilience, and the eternal search for meaning. Through his writing, Petro seeks to illuminate" +
+        " the beauty and depth of the Ukrainian spirit while inviting readers on a journey" +
+        " of self-discovery and reflection."
 };
 
 export async function init(): Promise<FastifyInstance> {

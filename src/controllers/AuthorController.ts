@@ -7,6 +7,7 @@ import {AuthorReplyDto} from "../dto/author/AuthorReplyDto";
 import {AppDb} from "../db/AppDb";
 import {AuthorService} from "../service/AuthorService";
 import {ApiError} from "../error/ApiError";
+import {ENationality} from "../interfaces";
 
 export class AuthorController {
     private static _instance: AuthorController;
@@ -23,16 +24,22 @@ export class AuthorController {
 
     async createAuthor(request: FastifyRequest<{ Body: CreateAuthorDto}>, reply: FastifyReply) {
         try {
-            const { name, surname } = request.body;
+            const { name, surname, nationality, biography } = request.body;
 
             isString(name, ApiMessages.AUTHOR.NAME_NOT_STRING);
             isString(surname, ApiMessages.AUTHOR.SURNAME_NOT_STRING);
+            isString(nationality, ApiMessages.AUTHOR.NATIONALITY_NOT_STRING);
+            isString(biography, ApiMessages.AUTHOR.BIOGRAPHY_NOT_STRING);
             check(name.length >= Constants.AUTHOR.MIN_NAME_LENGTH
                 && name.length <= Constants.AUTHOR.MAX_NAME_LENGTH, ApiMessages.AUTHOR.INVALID_NAME_LENGTH);
             check(surname.length >= Constants.AUTHOR.MIN_SURNAME_LENGTH
                 && surname.length <= Constants.AUTHOR.MAX_SURNAME_LENGTH, ApiMessages.AUTHOR.INVALID_SURNAME_LENGTH);
+            check(biography.length >= Constants.AUTHOR.MIN_BIOGRAPHY_LENGTH
+                && biography.length <= Constants.AUTHOR.MAX_BIOGRAPHY_LENGTH, ApiMessages.AUTHOR.INVALID_BIOGRAPHY_LENGTH);
             check(Constants.LATIN_ONLY_REGEXP.test(name), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_NAME);
             check(Constants.LATIN_ONLY_REGEXP.test(surname), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_SURNAME);
+            check(Constants.BIOGRAPHY_REGEXP.test(biography), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_BIOGRAPHY);
+            check(Object.keys(ENationality).includes(nationality), ApiMessages.AUTHOR.INVALID_NATIONALITY);
 
             const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
                 return AuthorService.instance.createAuthor(session, request.body);
