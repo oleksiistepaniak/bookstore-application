@@ -4,6 +4,7 @@ import {init, dispose, validCreateUserDto, clearUsers, setUser} from "../../Test
 import should from "should";
 import {Constants} from "../../../src/constants";
 import {UserModel} from "../../../src/model/UserModel";
+import {ApiMessages} from "../../../src/util/ApiMessages";
 
 describe("reg.test", () => {
     let app: FastifyInstance;
@@ -29,7 +30,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_email",
+            message: ApiMessages.USER.INVALID_EMAIL,
         });
         should(reply.status).deepEqual(400);
     });
@@ -47,7 +48,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "email_not_string",
+            message: ApiMessages.USER.EMAIL_NOT_STRING,
         });
         should(reply.status).deepEqual(400);
     });
@@ -65,7 +66,7 @@ describe("reg.test", () => {
            .expect(400);
 
        should(reply.body).deepEqual({
-           message: "invalid_email",
+           message: ApiMessages.USER.INVALID_EMAIL,
        });
        should(reply.status).deepEqual(400);
     });
@@ -83,7 +84,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -101,7 +102,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "password_not_string",
+            message: ApiMessages.USER.PASSWORD_NOT_STRING,
         });
         should(reply.status).deepEqual(400);
     });
@@ -120,7 +121,7 @@ describe("reg.test", () => {
            .expect(400);
 
        should(reply.body).deepEqual({
-           message: "invalid_password",
+           message: ApiMessages.USER.INVALID_PASSWORD,
        });
        should(reply.status).deepEqual(400);
     });
@@ -139,7 +140,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -158,7 +159,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -177,7 +178,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -196,7 +197,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -215,7 +216,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -234,7 +235,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -253,7 +254,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_password",
+            message: ApiMessages.USER.INVALID_PASSWORD,
         });
         should(reply.status).deepEqual(400);
     });
@@ -271,7 +272,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_firstname",
+            message: ApiMessages.USER.INVALID_FIRSTNAME,
         });
         should(reply.status).deepEqual(400);
     });
@@ -289,7 +290,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "firstname_not_string",
+            message: ApiMessages.USER.FIRSTNAME_NOT_STRING,
         });
         should(reply.status).deepEqual(400);
     });
@@ -308,7 +309,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_firstname",
+            message: ApiMessages.USER.INVALID_FIRSTNAME,
         });
         should(reply.status).deepEqual(400);
     });
@@ -327,7 +328,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_firstname",
+            message: ApiMessages.USER.INVALID_FIRSTNAME,
         });
         should(reply.status).deepEqual(400);
     });
@@ -345,7 +346,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_lastname",
+            message: ApiMessages.USER.INVALID_LASTNAME,
         });
         should(reply.status).deepEqual(400);
     });
@@ -363,7 +364,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "lastname_not_string",
+            message: ApiMessages.USER.LASTNAME_NOT_STRING,
         });
         should(reply.status).deepEqual(400);
     });
@@ -382,7 +383,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_lastname",
+            message: ApiMessages.USER.INVALID_LASTNAME,
         });
         should(reply.status).deepEqual(400);
     });
@@ -401,7 +402,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_lastname",
+            message: ApiMessages.USER.INVALID_LASTNAME,
         });
         should(reply.status).deepEqual(400);
     });
@@ -419,7 +420,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "age_not_number",
+            message: ApiMessages.USER.AGE_NOT_NUMBER,
         });
         should(reply.status).deepEqual(400);
     });
@@ -438,7 +439,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_age",
+            message: ApiMessages.USER.INVALID_AGE,
         });
         should(reply.status).deepEqual(400);
     });
@@ -457,7 +458,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "invalid_age",
+            message: ApiMessages.USER.INVALID_AGE,
         });
         should(reply.status).deepEqual(400);
     });
@@ -473,7 +474,7 @@ describe("reg.test", () => {
             .expect(400);
 
         should(reply.body).deepEqual({
-            message: "user_exists",
+            message: ApiMessages.USER.USER_EXISTS,
         });
         should(reply.status).deepEqual(400);
         await clearUsers();

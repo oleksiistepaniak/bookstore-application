@@ -3,6 +3,7 @@ import {clearUsers, dispose, init, setUser, validAuthenticationDto, validCreateU
 import request from "supertest";
 import should from "should";
 import {UserModel} from "../../../src/model/UserModel";
+import {ApiMessages} from "../../../src/util/ApiMessages";
 
 describe("auth.test", () => {
     let app: FastifyInstance;
@@ -29,7 +30,7 @@ describe("auth.test", () => {
            .expect(401);
 
        should(reply.body).deepEqual({
-           message: "invalid_password_or_email",
+           message: ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL,
        });
        should(reply.status).deepEqual(401);
     });
@@ -47,7 +48,7 @@ describe("auth.test", () => {
             .expect(401);
 
         should(reply.body).deepEqual({
-            message: "email_not_string",
+            message: ApiMessages.USER.EMAIL_NOT_STRING,
         });
         should(reply.status).deepEqual(401);
     });
@@ -65,7 +66,7 @@ describe("auth.test", () => {
             .expect(401);
 
         should(reply.body).deepEqual({
-            message: "invalid_password_or_email",
+            message: ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL,
         });
         should(reply.status).deepEqual(401);
     });
@@ -83,7 +84,7 @@ describe("auth.test", () => {
             .expect(401);
 
         should(reply.body).deepEqual({
-            message: "password_not_string",
+            message: ApiMessages.USER.PASSWORD_NOT_STRING,
         });
         should(reply.status).deepEqual(401);
     });
@@ -101,7 +102,7 @@ describe("auth.test", () => {
             .expect(401);
 
         should(reply.body).deepEqual({
-            message: "invalid_password_or_email",
+            message: ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL,
         });
         should(reply.status).deepEqual(401);
     });
