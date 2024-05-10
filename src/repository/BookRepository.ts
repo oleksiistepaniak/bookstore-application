@@ -17,6 +17,8 @@ export class BookRepository {
     }
 
     async createBook(session: ClientSession, book: BookModel): Promise<void> {
-        await AppDb.instance.booksCollection.insertOne(book.data, { session });
+        const db = AppDb.instance;
+
+        await db.booksCollection.insertOne(book.data, { session });
     }
 }

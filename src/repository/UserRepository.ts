@@ -16,11 +16,16 @@ export class UserRepository {
     }
 
     async createUser(session: ClientSession, user: UserModel): Promise<void> {
-        await AppDb.instance.usersCollection.insertOne(user.data, {session});
+        const db = AppDb.instance;
+
+        await db.usersCollection.insertOne(user.data, {session});
     }
 
     async findUserByEmail(session: ClientSession, email: string): Promise<UserModel | null> {
-        const user = await AppDb.instance.usersCollection.findOne({email}, {session});
+        const db = AppDb.instance;
+
+        const user = await db.usersCollection.findOne({email}, {session});
+
         return user ? new UserModel(user) : null;
     }
 }
