@@ -1,5 +1,5 @@
-import {AuthenticationController} from "../controllers/AuthenticationController";
 import {app} from "../index";
+import {AuthenticationController} from "../controller/AuthenticationController";
 
 export default async function authenticationRoutes() {
     app.post("/api/signup", AuthenticationController.instance.signup);

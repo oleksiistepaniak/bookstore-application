@@ -1,6 +1,6 @@
 import {app} from "../index";
-import {AuthorController} from "../controllers/AuthorController";
 import {authenticationMiddleware} from "../middleware/AuthenticationMiddleware";
+import {AuthorController} from "../controller/AuthorController";
 
 export default async function authorRoutes() {
     app.post("/api/author/create", {

@@ -1,11 +1,11 @@
 import fastify from "fastify";
 import dotenv from "dotenv";
 import {AppDb} from "./db/AppDb";
-import authenticationRoutes from "./routes/UserRoutes";
 import {AppConf} from "./config/AppConf";
 import {Constants} from "./constants";
-import authorRoutes from "./routes/AuthorRoutes";
-import bookRoutes from "./routes/BookRoutes";
+import authenticationRoutes from "./route/UserRoutes";
+import authorRoutes from "./route/AuthorRoutes";
+import bookRoutes from "./route/BookRoutes";
 
 export const app = fastify({
     logger: true,

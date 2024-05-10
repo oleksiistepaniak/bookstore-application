@@ -1,6 +1,6 @@
 import {app} from "../index";
 import {authenticationMiddleware} from "../middleware/AuthenticationMiddleware";
-import {BookController} from "../controllers/BookController";
+import {BookController} from "../controller/BookController";
 
 export default async function bookRoutes() {
     app.post("/api/book/create", {
