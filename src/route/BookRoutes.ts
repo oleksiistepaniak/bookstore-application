@@ -11,4 +11,8 @@ export default async function bookRoutes() {
         preHandler: authenticationMiddleware,
         handler: BookController.instance.findBooksByCategory,
     });
+    app.post("/api/book/all", {
+        preHandler: authenticationMiddleware,
+        handler: BookController.instance.findAllBooks,
+    });
 }

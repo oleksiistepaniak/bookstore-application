@@ -3,12 +3,13 @@ import {CreateBookDto} from "../dto/book/CreateBookDto";
 import {AuthorRepository} from "../repository/AuthorRepository";
 import {check} from "../util/ApiCheck";
 import {ApiMessages} from "../util/ApiMessages";
-import {BookRepository} from "../repository/BookRepository";
+import {BookRepository, IBookFilter} from "../repository/BookRepository";
 import {BookModel} from "../model/BookModel";
 import {ApiError} from "../error/ApiError";
 import {BookReplyDto} from "../dto/book/BookReplyDto";
 import {CategoryDto} from "../dto/book/CategoryDto";
 import {EBookCategory} from "../interfaces";
+import {FindAllBookDto} from "../dto/book/FindAllBookDto";
 
 export class BookService {
     private static _instance: BookService;
@@ -49,6 +50,22 @@ export class BookService {
         const category = dto.category as EBookCategory;
 
         const books = await bookRepo.findBooksByCategory(session, category);
+        return books.map(it => it.mapToDto());
+    }
+
+    async findAllBooks(session: ClientSession, dto: FindAllBookDto): Promise<BookReplyDto[]> {
+        const bookRepo = BookRepository.instance;
+
+        const filter: IBookFilter = {
+            page: dto.page,
+            limit: dto.limit,
+            title: dto.title,
+            description: dto.description,
+            minNumberOfPages: dto.minNumberOfPages,
+            maxNumberOfPages: dto.maxNumberOfPages,
+        };
+
+        const books = await bookRepo.findAllBooks(session, filter);
         return books.map(it => it.mapToDto());
     }
 }

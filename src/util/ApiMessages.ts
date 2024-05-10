@@ -45,6 +45,10 @@ export const ApiMessages = {
         ONLY_LATIN_CHARS_FOR_DESCRIPTION: "only_latin_chars_for_description",
         AUTHOR_NOT_FOUND: "author_not_found",
         CANNOT_CREATE_BOOK: "cannot_create_book",
+        PAGE_NOT_NUMBER: "page_not_number",
+        LIMIT_NOT_NUMBER: "limit_not_number",
+        MAX_NUMBER_OF_PAGES_NOT_NUMBER: "max_number_of_pages_not_number",
+        MIN_NUMBER_OF_PAGES_NOT_NUMBER: "min_number_of_pages_not_number",
     },
     AUTH_MIDDLEWARE: {
         TOKEN_NOT_PROVIDED: "token_not_provided",

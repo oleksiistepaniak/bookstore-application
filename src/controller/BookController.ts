@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify";
 import {CreateBookDto} from "../dto/book/CreateBookDto";
-import {isString, isNumber, check} from "../util/ApiCheck";
+import {isString, isNumber, check, isOptionalNumber, isOptionalString} from "../util/ApiCheck";
 import {ApiMessages} from "../util/ApiMessages";
 import {Constants} from "../constants";
 import {EBookCategory} from "../interfaces";
@@ -10,6 +10,7 @@ import {BookService} from "../service/BookService";
 import {ApiError} from "../error/ApiError";
 import {ObjectId} from "mongodb";
 import {CategoryDto} from "../dto/book/CategoryDto";
+import {FindAllBookDto} from "../dto/book/FindAllBookDto";
 
 export class BookController {
     private static _instance: BookController;
@@ -71,6 +72,31 @@ export class BookController {
 
             const dtos: BookReplyDto[] = await AppDb.instance.withTransaction((session) => {
                 return BookService.instance.findBooksByCategory(session, request.body);
+            });
+
+            reply.status(200).send(dtos);
+        } catch (error) {
+            const apiError = error as ApiError;
+            reply.status(400).send({
+                message: apiError.message,
+            });
+            return;
+        }
+    }
+
+    async findAllBooks(request: FastifyRequest<{ Body: FindAllBookDto }>, reply: FastifyReply): Promise<void> {
+        try {
+            const { page, limit, title, description, minNumberOfPages, maxNumberOfPages } = request.body;
+
+            isOptionalNumber(page, ApiMessages.BOOK.PAGE_NOT_NUMBER);
+            isOptionalNumber(limit, ApiMessages.BOOK.LIMIT_NOT_NUMBER);
+            isOptionalNumber(minNumberOfPages, ApiMessages.BOOK.MIN_NUMBER_OF_PAGES_NOT_NUMBER);
+            isOptionalNumber(maxNumberOfPages, ApiMessages.BOOK.MAX_NUMBER_OF_PAGES_NOT_NUMBER);
+            isOptionalString(title, ApiMessages.BOOK.TITLE_NOT_STRING);
+            isOptionalString(description, ApiMessages.BOOK.DESCRIPTION_NOT_STRING);
+
+            const dtos: BookReplyDto[] = await AppDb.instance.withTransaction((session) => {
+                return BookService.instance.findAllBooks(session, request.body);
             });
 
             reply.status(200).send(dtos);
