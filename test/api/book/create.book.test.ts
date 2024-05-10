@@ -46,7 +46,7 @@ describe("create.book.test", () => {
             title: "How to quickly learn C++? Full guide and instructions!",
             description: "This book guides you how to learn C++ more efficiently and dive into more complex" +
                 " algorithms and data structures! So, let's do it together!",
-            category: EBookCategory.Non.toString(),
+            category: EBookCategory.NON.toString(),
             numberOfPages: 354,
             authorsIds: [validAuthorId.toString(), validAuthorIdTwo.toString()],
         };

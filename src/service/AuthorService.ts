@@ -5,6 +5,8 @@ import {AuthorRepository} from "../repository/AuthorRepository";
 import {AuthorModel} from "../model/AuthorModel";
 import {ApiError} from "../error/ApiError";
 import {ApiMessages} from "../util/ApiMessages";
+import {NationalityDto} from "../dto/author/NationalityDto";
+import {ENationality} from "../interfaces";
 
 export class AuthorService {
     private static _instance: AuthorService;
@@ -30,5 +32,13 @@ export class AuthorService {
             throw new ApiError(ApiMessages.AUTHOR.CANNOT_CREATE_AUTHOR);
         }
         return authorModel.mapToDto();
+    }
+
+    async getAuthorsByNationality(session: ClientSession, dto: NationalityDto): Promise<AuthorReplyDto[]> {
+        const authorRepo = AuthorRepository.instance;
+        const nationality = dto.nationality as unknown as ENationality;
+
+        const authors = await authorRepo.getAuthorsByNationality(session, nationality);
+        return authors.map(it => it.mapToDto());
     }
 }

@@ -31,7 +31,7 @@ export const validAuthenticationDto: AuthenticationDto = {
 export const validCreateAuthorDto: CreateAuthorDto = {
     name: "Petro",
     surname: "Mostavchuk",
-    nationality: ENationality.Ukrainian.toString(),
+    nationality: ENationality.UKRAINIAN.toString(),
     biography: "Petro Mostavchuk is a Ukrainian author known for his captivating storytelling and profound insights" +
         " into the human condition. Born and raised in the picturesque Carpathian Mountains," +
         " Petro draws inspiration from the rich cultural heritage and natural beauty of his homeland." +
@@ -45,7 +45,7 @@ export const validCreateAuthorDto: CreateAuthorDto = {
 export const validCreateAuthorDtoTwo: CreateAuthorDto = {
     name: "Taras",
     surname: "Shevchenko",
-    nationality: ENationality.Ukrainian.toString(),
+    nationality: ENationality.UKRAINIAN.toString(),
     biography: "Taras Shevchenko was a Ukrainian poet, writer, artist, and political figure. He is considered" +
         " the greatest Ukrainian poet and an iconic figure of Ukrainian culture. Shevchenko's literary works are" +
         " regarded as classics of Ukrainian literature and have had a profound impact on the development of Ukrainian" +

@@ -43,9 +43,9 @@ export class BookController {
                 && description.length <= Constants.BOOK.MAX_DESCRIPTION_LENGTH, ApiMessages.BOOK.INVALID_DESCRIPTION_LENGTH);
             check(numberOfPages >= Constants.BOOK.MIN_NUMBER_OF_PAGES
                 && numberOfPages <= Constants.BOOK.MAX_NUMBER_OF_PAGES, ApiMessages.BOOK.INVALID_NUMBER_OF_PAGES);
-            check(Object.keys(EBookCategory).includes(category), ApiMessages.BOOK.INVALID_CATEGORY);
             check(Constants.LATIN_WITH_ONLY_SYMBOLS_REGEXP.test(title), ApiMessages.BOOK.ONLY_LATIN_CHARS_FOR_TITLE);
             check(Constants.LATIN_WITH_ONLY_SYMBOLS_REGEXP.test(description), ApiMessages.BOOK.ONLY_LATIN_CHARS_FOR_DESCRIPTION);
+            check(Object.keys(EBookCategory).includes(category.toUpperCase()), ApiMessages.BOOK.INVALID_CATEGORY);
 
             const dto: BookReplyDto = await AppDb.instance.withTransaction((session) => {
                 return BookService.instance.createBook(session, request.body);

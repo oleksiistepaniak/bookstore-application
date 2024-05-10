@@ -7,4 +7,8 @@ export default async function authorRoutes() {
         preHandler: authenticationMiddleware,
         handler: AuthorController.instance.createAuthor,
     });
+    app.post("/api/author/all/nationality", {
+        preHandler: authenticationMiddleware,
+        handler: AuthorController.instance.getAuthorsByNationality,
+    });
 }

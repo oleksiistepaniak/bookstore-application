@@ -42,7 +42,7 @@ export class AuthorModel {
             _id: new ObjectId(),
             name: dto.name,
             surname: dto.surname,
-            nationality: dto.nationality as unknown as ENationality,
+            nationality: dto.nationality as ENationality,
             biography: dto.biography,
         });
     }

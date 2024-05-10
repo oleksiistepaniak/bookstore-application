@@ -1,6 +1,7 @@
 import {ClientSession, ObjectId} from "mongodb";
 import {AuthorModel} from "../model/AuthorModel";
 import {AppDb} from "../db/AppDb";
+import {ENationality} from "../interfaces";
 
 export class AuthorRepository {
     private static _instance: AuthorRepository;
@@ -27,5 +28,13 @@ export class AuthorRepository {
         const author = await db.authorsCollection.findOne({ _id: id }, { session });
 
         return author ? new AuthorModel(author) : null;
+    }
+
+    async getAuthorsByNationality(session: ClientSession, nationality: ENationality): Promise<AuthorModel[]> {
+        const db = AppDb.instance;
+
+        const authors = await db.authorsCollection.find({ nationality }, { session }).toArray();
+
+        return authors.map(it => new AuthorModel(it));
     }
 }
