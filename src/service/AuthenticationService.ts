@@ -40,6 +40,8 @@ export class AuthenticationService {
             if (errorMessage.message.includes(Constants.USER.E11000_MESSAGE) ||
                 errorMessage.message.includes(Constants.USER.DUPLICATE_KEY_MESSAGE)) {
                 throw new ApiError(ApiMessages.USER.USER_EXISTS);
+            } else {
+                throw new ApiError(ApiMessages.USER.CANNOT_CREATE_USER);
             }
         }
         return userModel.mapToDto();
