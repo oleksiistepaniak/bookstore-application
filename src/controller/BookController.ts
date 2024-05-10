@@ -9,6 +9,7 @@ import {AppDb} from "../db/AppDb";
 import {BookService} from "../service/BookService";
 import {ApiError} from "../error/ApiError";
 import {ObjectId} from "mongodb";
+import {CategoryDto} from "../dto/book/CategoryDto";
 
 export class BookController {
     private static _instance: BookController;
@@ -52,6 +53,27 @@ export class BookController {
             });
 
             reply.status(200).send(dto);
+        } catch (error) {
+            const apiError = error as ApiError;
+            reply.status(400).send({
+                message: apiError.message,
+            });
+            return;
+        }
+    }
+
+    async findBooksByCategory(request: FastifyRequest<{ Body: CategoryDto }>, reply: FastifyReply): Promise<void> {
+        try {
+            const { category } = request.body;
+
+            isString(category, ApiMessages.BOOK.CATEGORY_NOT_STRING);
+            check(Object.keys(EBookCategory).includes(category.toUpperCase()), ApiMessages.BOOK.INVALID_CATEGORY);
+
+            const dtos: BookReplyDto[] = await AppDb.instance.withTransaction((session) => {
+                return BookService.instance.findBooksByCategory(session, request.body);
+            });
+
+            reply.status(200).send(dtos);
         } catch (error) {
             const apiError = error as ApiError;
             reply.status(400).send({

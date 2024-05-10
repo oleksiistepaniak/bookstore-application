@@ -77,7 +77,7 @@ export class AuthorController {
         }
     }
 
-    async findAllAuthors(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+    async findAllAuthors(_request: FastifyRequest, reply: FastifyReply): Promise<void> {
         try {
             const dtos: AuthorReplyDto[] = await AppDb.instance.withTransaction((session) => {
                 return AuthorService.instance.findAllAuthors(session);

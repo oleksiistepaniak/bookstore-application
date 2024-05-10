@@ -36,7 +36,7 @@ export class AuthorService {
 
     async findAuthorsByNationality(session: ClientSession, dto: NationalityDto): Promise<AuthorReplyDto[]> {
         const authorRepo = AuthorRepository.instance;
-        const nationality = dto.nationality as unknown as ENationality;
+        const nationality = dto.nationality as ENationality;
 
         const authors = await authorRepo.findAuthorsByNationality(session, nationality);
         return authors.map(it => it.mapToDto());

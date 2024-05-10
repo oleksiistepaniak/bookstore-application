@@ -12,6 +12,7 @@ import {Constants} from "../src/constants";
 import {CreateAuthorDto} from "../src/dto/author/CreateAuthorDto";
 import {ENationality} from "../src/interfaces";
 import {AuthorModel} from "../src/model/AuthorModel";
+import {BookModel} from "../src/model/BookModel";
 
 let test_app: FastifyInstance;
 
@@ -85,8 +86,12 @@ export async function setUser(userModel: UserModel): Promise<void> {
     });
 }
 
-export async function setAuthor(authorModel: AuthorModel) {
+export async function setAuthor(authorModel: AuthorModel): Promise<void> {
     await AppDb.instance.authorsCollection.insertOne({...authorModel.data});
+}
+
+export async function setBook(bookModel: BookModel): Promise<void> {
+    await AppDb.instance.booksCollection.insertOne({...bookModel.data});
 }
 
 export async function dispose(): Promise<void> {
