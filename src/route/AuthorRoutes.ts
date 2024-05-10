@@ -9,6 +9,10 @@ export default async function authorRoutes() {
     });
     app.post("/api/author/all/nationality", {
         preHandler: authenticationMiddleware,
-        handler: AuthorController.instance.getAuthorsByNationality,
+        handler: AuthorController.instance.findAuthorsByNationality,
+    });
+    app.post("/api/author/all", {
+        preHandler: authenticationMiddleware,
+        handler: AuthorController.instance.findAllAuthors,
     });
 }

@@ -15,7 +15,7 @@ import request from "supertest";
 import should from "should";
 import {ApiMessages} from "../../../src/util/ApiMessages";
 
-describe("get.authors.by.nationality.test", () => {
+describe("find.authors.by.nationality.test", () => {
     let app: FastifyInstance;
     let validToken: string;
 

@@ -56,7 +56,7 @@ export class AuthorController {
         }
     }
 
-    async getAuthorsByNationality(request: FastifyRequest<{ Body: NationalityDto }>, reply: FastifyReply): Promise<void> {
+    async findAuthorsByNationality(request: FastifyRequest<{ Body: NationalityDto }>, reply: FastifyReply): Promise<void> {
         try {
             const {nationality} = request.body;
 
@@ -64,7 +64,23 @@ export class AuthorController {
             check(Object.keys(ENationality).includes(nationality.toUpperCase()), ApiMessages.AUTHOR.INVALID_NATIONALITY);
 
             const dtos: AuthorReplyDto[] = await AppDb.instance.withTransaction((session) => {
-                return AuthorService.instance.getAuthorsByNationality(session, request.body);
+                return AuthorService.instance.findAuthorsByNationality(session, request.body);
+            });
+
+            reply.status(200).send(dtos);
+        } catch (error) {
+            const apiError = error as ApiError;
+            reply.status(400).send({
+                message: apiError.message,
+            });
+            return;
+        }
+    }
+
+    async findAllAuthors(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+        try {
+            const dtos: AuthorReplyDto[] = await AppDb.instance.withTransaction((session) => {
+                return AuthorService.instance.findAllAuthors(session);
             });
 
             reply.status(200).send(dtos);

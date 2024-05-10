@@ -30,10 +30,18 @@ export class AuthorRepository {
         return author ? new AuthorModel(author) : null;
     }
 
-    async getAuthorsByNationality(session: ClientSession, nationality: ENationality): Promise<AuthorModel[]> {
+    async findAuthorsByNationality(session: ClientSession, nationality: ENationality): Promise<AuthorModel[]> {
         const db = AppDb.instance;
 
         const authors = await db.authorsCollection.find({ nationality }, { session }).toArray();
+
+        return authors.map(it => new AuthorModel(it));
+    }
+
+    async findAllAuthors(session: ClientSession): Promise<AuthorModel[]> {
+        const db = AppDb.instance;
+
+        const authors = await db.authorsCollection.find({}, { session }).toArray();
 
         return authors.map(it => new AuthorModel(it));
     }
