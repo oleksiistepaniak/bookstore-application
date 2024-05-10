@@ -22,7 +22,7 @@ export class AuthorController {
         return this._instance;
     }
 
-    async createAuthor(request: FastifyRequest<{ Body: CreateAuthorDto}>, reply: FastifyReply) {
+    async createAuthor(request: FastifyRequest<{ Body: CreateAuthorDto}>, reply: FastifyReply): Promise<void> {
         try {
             const { name, surname, nationality, biography } = request.body;
 
@@ -38,7 +38,7 @@ export class AuthorController {
                 && biography.length <= Constants.AUTHOR.MAX_BIOGRAPHY_LENGTH, ApiMessages.AUTHOR.INVALID_BIOGRAPHY_LENGTH);
             check(Constants.LATIN_ONLY_REGEXP.test(name), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_NAME);
             check(Constants.LATIN_ONLY_REGEXP.test(surname), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_SURNAME);
-            check(Constants.BIOGRAPHY_REGEXP.test(biography), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_BIOGRAPHY);
+            check(Constants.LATIN_WITH_ONLY_SYMBOLS_REGEXP.test(biography), ApiMessages.AUTHOR.ONLY_LATIN_CHARS_FOR_BIOGRAPHY);
             check(Object.keys(ENationality).includes(nationality), ApiMessages.AUTHOR.INVALID_NATIONALITY);
 
             const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
@@ -51,6 +51,7 @@ export class AuthorController {
             reply.status(400).send({
                 message: apiError.message,
             });
+            return;
         }
     }
 }

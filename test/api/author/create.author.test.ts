@@ -1,5 +1,6 @@
 import {FastifyInstance} from "fastify";
 import {
+    clearAuthors,
     clearUsers,
     dispose,
     getValidToken,
@@ -28,6 +29,8 @@ describe("create.author.test", () => {
     });
 
     after(async () => {
+        await clearAuthors();
+        await clearUsers();
         await dispose();
     });
 

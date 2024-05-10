@@ -5,6 +5,7 @@ import authenticationRoutes from "./routes/UserRoutes";
 import {AppConf} from "./config/AppConf";
 import {Constants} from "./constants";
 import authorRoutes from "./routes/AuthorRoutes";
+import bookRoutes from "./routes/BookRoutes";
 
 export const app = fastify({
     logger: true,
@@ -18,6 +19,7 @@ if (process.env.IS_TEST) {
 
 app.register(authenticationRoutes);
 app.register(authorRoutes);
+app.register(bookRoutes);
 
 app.get("/health", async (_request, _reply) => {
     return {

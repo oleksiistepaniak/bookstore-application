@@ -4,7 +4,7 @@ export const Constants = {
     EMAIL_REGEXP: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     PASSWORD_REGEXP: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/,
     LATIN_ONLY_REGEXP: /^[a-zA-Z]+$/,
-    BIOGRAPHY_REGEXP: /^[a-zA-Z\s.,'’()-]+$/,
+    LATIN_WITH_ONLY_SYMBOLS_REGEXP: /^[a-zA-Z\s.,'’()-?!]+$/,
     MIN_PASSWORD_LENGTH: 6,
     MAX_PASSWORD_LENGTH: 20,
     NO_SESSION: null as unknown as ClientSession,
@@ -24,5 +24,13 @@ export const Constants = {
         MAX_BIOGRAPHY_LENGTH: 2000,
         MIN_SURNAME_LENGTH: 2,
         MAX_SURNAME_LENGTH: 40,
+    },
+    BOOK: {
+        MIN_TITLE_LENGTH: 4,
+        MAX_TITLE_LENGTH: 255,
+        MIN_DESCRIPTION_LENGTH: 20,
+        MAX_DESCRIPTION_LENGTH: 510,
+        MAX_NUMBER_OF_PAGES: 5000,
+        MIN_NUMBER_OF_PAGES: 30,
     },
 }

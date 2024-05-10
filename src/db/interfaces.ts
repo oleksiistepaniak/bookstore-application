@@ -24,5 +24,5 @@ export interface BookRecord {
     description: string;
     numberOfPages: number;
     category: EBookCategory;
-    authorsId: ObjectId[];
+    authorsIds: ObjectId[];
 }

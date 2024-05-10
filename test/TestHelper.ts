@@ -11,6 +11,7 @@ import {AuthenticationService} from "../src/service/AuthenticationService";
 import {Constants} from "../src/constants";
 import {CreateAuthorDto} from "../src/dto/author/CreateAuthorDto";
 import {ENationality} from "../src/interfaces";
+import {AuthorModel} from "../src/model/AuthorModel";
 
 let test_app: FastifyInstance;
 
@@ -41,6 +42,19 @@ export const validCreateAuthorDto: CreateAuthorDto = {
         " of self-discovery and reflection."
 };
 
+export const validCreateAuthorDtoTwo: CreateAuthorDto = {
+    name: "Taras",
+    surname: "Shevchenko",
+    nationality: ENationality.Ukrainian.toString(),
+    biography: "Taras Shevchenko was a Ukrainian poet, writer, artist, and political figure. He is considered" +
+        " the greatest Ukrainian poet and an iconic figure of Ukrainian culture. Shevchenko's literary works are" +
+        " regarded as classics of Ukrainian literature and have had a profound impact on the development of Ukrainian" +
+        " identity and national consciousness. Born into a serf family in 1814, Shevchenko overcame numerous hardships" +
+        " to become one of the most influential figures in Ukrainian history. His poetry often explores themes of" +
+        " freedom, justice, and the struggles of the Ukrainian people. Shevchenko's legacy continues to inspire " +
+        "generations of Ukrainians and people around the world."
+};
+
 export async function init(): Promise<FastifyInstance> {
     test_app = app;
     return test_app;
@@ -55,12 +69,24 @@ export async function clearUsers(): Promise<void> {
     await AppDb.instance.usersCollection.deleteMany({});
 }
 
+export async function clearAuthors(): Promise<void> {
+    await AppDb.instance.authorsCollection.deleteMany({});
+}
+
+export async function clearBooks(): Promise<void> {
+    await AppDb.instance.booksCollection.deleteMany({});
+}
+
 export async function setUser(userModel: UserModel): Promise<void> {
     const hashedPassword = await bcrypt.hash(userModel.password, AppConf.instance.SALT);
     await AppDb.instance.usersCollection.insertOne({
         ...userModel.data,
         password: hashedPassword,
     });
+}
+
+export async function setAuthor(authorModel: AuthorModel) {
+    await AppDb.instance.authorsCollection.insertOne({...authorModel.data});
 }
 
 export async function dispose(): Promise<void> {

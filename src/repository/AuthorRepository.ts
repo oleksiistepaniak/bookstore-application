@@ -1,4 +1,4 @@
-import {ClientSession} from "mongodb";
+import {ClientSession, ObjectId} from "mongodb";
 import {AuthorModel} from "../model/AuthorModel";
 import {AppDb} from "../db/AppDb";
 
@@ -16,6 +16,16 @@ export class AuthorRepository {
     }
 
     async createAuthor(session: ClientSession, author: AuthorModel): Promise<void> {
-        await AppDb.instance.authorsCollection.insertOne(author.data, { session });
+        const db = AppDb.instance;
+
+        await db.authorsCollection.insertOne(author.data, { session });
+    }
+
+    async findAuthorById(session: ClientSession, id: ObjectId): Promise<AuthorModel | null> {
+        const db = AppDb.instance;
+
+        const author = await db.authorsCollection.findOne({ _id: id }, { session });
+
+        return author ? new AuthorModel(author) : null;
     }
 }
