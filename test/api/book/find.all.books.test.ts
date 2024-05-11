@@ -279,6 +279,74 @@ describe("find.all.books.test", () => {
         should(reply.status).deepEqual(400);
     });
 
+    it("category not string", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                category: true,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.BOOK.CATEGORY_NOT_STRING,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("authors ids not string array", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                authorsIds: true,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.BOOK.INVALID_AUTHORS_IDS_ARRAY,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("one of authorsIds not string", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                authorsIds: [true],
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.BOOK.AUTHOR_ID_NOT_STRING,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
+    it("invalid author id", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                authorsIds: ["invalid_author_id"],
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.BOOK.INVALID_AUTHOR_ID,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
     it("success only page", async () => {
         const server = app.server;
 

@@ -24,6 +24,18 @@ export function isOptionalNumber(input: unknown, message: string): void {
     }
 }
 
+export function isArray(input: unknown, message: string): void {
+    if (!Array.isArray(input)) {
+        throw new Error(message);
+    }
+}
+
+export function isOptionalArray(input: unknown, message: string): void {
+    if (input) {
+        isArray(input, message);
+    }
+}
+
 export function check(condition: boolean, message: string): void {
     if (!condition) {
         throw new Error(message);

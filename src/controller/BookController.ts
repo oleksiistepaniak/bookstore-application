@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify";
 import {CreateBookDto} from "../dto/book/CreateBookDto";
-import {isString, isNumber, check, isOptionalNumber, isOptionalString} from "../util/ApiCheck";
+import {isString, isNumber, check, isOptionalNumber, isOptionalString, isOptionalArray} from "../util/ApiCheck";
 import {ApiMessages} from "../util/ApiMessages";
 import {Constants} from "../constants";
 import {EBookCategory} from "../interfaces";
@@ -64,7 +64,7 @@ export class BookController {
 
     async findAllBooks(request: FastifyRequest<{ Body: FindAllBookDto }>, reply: FastifyReply): Promise<void> {
         try {
-            const { page, limit, title, description, minNumberOfPages, maxNumberOfPages } = request.body;
+            const { page, limit, title, description, minNumberOfPages, maxNumberOfPages, category, authorsIds } = request.body;
 
             isOptionalNumber(page, ApiMessages.BOOK.PAGE_NOT_NUMBER);
             isOptionalNumber(limit, ApiMessages.BOOK.LIMIT_NOT_NUMBER);
@@ -72,6 +72,14 @@ export class BookController {
             isOptionalNumber(maxNumberOfPages, ApiMessages.BOOK.MAX_NUMBER_OF_PAGES_NOT_NUMBER);
             isOptionalString(title, ApiMessages.BOOK.TITLE_NOT_STRING);
             isOptionalString(description, ApiMessages.BOOK.DESCRIPTION_NOT_STRING);
+            isOptionalString(category, ApiMessages.BOOK.CATEGORY_NOT_STRING);
+            isOptionalArray(authorsIds, ApiMessages.BOOK.INVALID_AUTHORS_IDS_ARRAY);
+            if (authorsIds && Array.isArray(authorsIds)) {
+                for (const authorId of authorsIds) {
+                    isString(authorId, ApiMessages.BOOK.AUTHOR_ID_NOT_STRING);
+                    check(ObjectId.isValid(authorId), ApiMessages.BOOK.INVALID_AUTHOR_ID);
+                }
+            }
 
             const dtos: BookReplyDto[] = await AppDb.instance.withTransaction((session) => {
                 return BookService.instance.findAllBooks(session, request.body);

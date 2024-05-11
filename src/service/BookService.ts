@@ -55,7 +55,7 @@ export class BookService {
             minNumberOfPages: dto.minNumberOfPages,
             maxNumberOfPages: dto.maxNumberOfPages,
             category: dto.category ? dto.category as EBookCategory : undefined,
-            authorsIds: dto.authorsIds ? dto.authorsIds.map(it => new ObjectId(it)) : undefined,
+            authorsIds: Array.isArray(dto.authorsIds) ? dto.authorsIds.map(it => new ObjectId(it)) : undefined,
         };
 
         const books = await bookRepo.findAllBooks(session, filter);

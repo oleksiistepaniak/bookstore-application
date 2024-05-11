@@ -39,7 +39,7 @@ export const ApiMessages = {
         INVALID_DESCRIPTION_LENGTH: "invalid_description_length",
         INVALID_NUMBER_OF_PAGES: "invalid_number_of_pages",
         INVALID_CATEGORY: "invalid_category",
-        INVALID_AUTHORS_IDS_ARRAY: "invalid_authors_ids",
+        INVALID_AUTHORS_IDS_ARRAY: "invalid_authors_ids_array",
         INVALID_AUTHOR_ID: "invalid_author_id",
         ONLY_LATIN_CHARS_FOR_TITLE: "only_latin_chars_for_title",
         ONLY_LATIN_CHARS_FOR_DESCRIPTION: "only_latin_chars_for_description",
