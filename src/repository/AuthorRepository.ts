@@ -3,6 +3,15 @@ import {AuthorModel} from "../model/AuthorModel";
 import {AppDb} from "../db/AppDb";
 import {ENationality} from "../interfaces";
 
+export interface IAuthorFilter {
+    page?: number;
+    limit?: number;
+    name?: string;
+    surname?: string;
+    biography?: string;
+    nationality?: ENationality;
+}
+
 export class AuthorRepository {
     private static _instance: AuthorRepository;
 
@@ -30,18 +39,35 @@ export class AuthorRepository {
         return author ? new AuthorModel(author) : null;
     }
 
-    async findAuthorsByNationality(session: ClientSession, nationality: ENationality): Promise<AuthorModel[]> {
+    async findAllAuthors(session: ClientSession, filter: IAuthorFilter): Promise<AuthorModel[]> {
         const db = AppDb.instance;
+        const page = filter.page ?? 1;
+        const limit = filter.limit ?? 10;
 
-        const authors = await db.authorsCollection.find({ nationality }, { session }).toArray();
+        const skip = (page - 1) * limit;
 
-        return authors.map(it => new AuthorModel(it));
-    }
+        const query: any = {};
 
-    async findAllAuthors(session: ClientSession): Promise<AuthorModel[]> {
-        const db = AppDb.instance;
+        if (filter.name) {
+            query.name = { $regex: `.*${filter.name}.*`, $options: "i" };
+        }
 
-        const authors = await db.authorsCollection.find({}, { session }).toArray();
+        if (filter.surname) {
+            query.surname = { $regex: `.*${filter.surname}.*`, $options: "i" };
+        }
+
+        if (filter.biography) {
+            query.biography = { $regex: `.*${filter.biography}.*`, $options: "i" };
+        }
+
+        if (filter.nationality) {
+            query.nationality = filter.nationality;
+        }
+
+        const authors = await db.authorsCollection.find(query, { session })
+            .skip(skip)
+            .limit(limit)
+            .toArray();
 
         return authors.map(it => new AuthorModel(it));
     }

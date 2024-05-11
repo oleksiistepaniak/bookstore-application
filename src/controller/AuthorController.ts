@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify";
 import {CreateAuthorDto} from "../dto/author/CreateAuthorDto";
-import {check, isString} from "../util/ApiCheck";
+import {check, isOptionalNumber, isOptionalString, isString} from "../util/ApiCheck";
 import {ApiMessages} from "../util/ApiMessages";
 import {Constants} from "../constants";
 import {AuthorReplyDto} from "../dto/author/AuthorReplyDto";
@@ -8,7 +8,7 @@ import {AppDb} from "../db/AppDb";
 import {AuthorService} from "../service/AuthorService";
 import {ApiError} from "../error/ApiError";
 import {ENationality} from "../interfaces";
-import {NationalityDto} from "../dto/author/NationalityDto";
+import {FindAllAuthorDto} from "../dto/author/FindAllAuthorDto";
 
 export class AuthorController {
     private static _instance: AuthorController;
@@ -56,31 +56,19 @@ export class AuthorController {
         }
     }
 
-    async findAuthorsByNationality(request: FastifyRequest<{ Body: NationalityDto }>, reply: FastifyReply): Promise<void> {
+    async findAllAuthors(request: FastifyRequest<{ Body: FindAllAuthorDto }>, reply: FastifyReply): Promise<void> {
         try {
-            const {nationality} = request.body;
+            const { page, limit, name, surname, nationality, biography } = request.body;
 
-            isString(nationality, ApiMessages.AUTHOR.NATIONALITY_NOT_STRING);
-            check(Object.keys(ENationality).includes(nationality.toUpperCase()), ApiMessages.AUTHOR.INVALID_NATIONALITY);
+            isOptionalNumber(page, ApiMessages.AUTHOR.PAGE_NOT_NUMBER);
+            isOptionalNumber(limit, ApiMessages.AUTHOR.LIMIT_NOT_NUMBER);
+            isOptionalString(name, ApiMessages.AUTHOR.NAME_NOT_STRING);
+            isOptionalString(surname, ApiMessages.AUTHOR.SURNAME_NOT_STRING);
+            isOptionalString(nationality, ApiMessages.AUTHOR.NATIONALITY_NOT_STRING);
+            isOptionalString(biography, ApiMessages.AUTHOR.BIOGRAPHY_NOT_STRING);
 
             const dtos: AuthorReplyDto[] = await AppDb.instance.withTransaction((session) => {
-                return AuthorService.instance.findAuthorsByNationality(session, request.body);
-            });
-
-            reply.status(200).send(dtos);
-        } catch (error) {
-            const apiError = error as ApiError;
-            reply.status(400).send({
-                message: apiError.message,
-            });
-            return;
-        }
-    }
-
-    async findAllAuthors(_request: FastifyRequest, reply: FastifyReply): Promise<void> {
-        try {
-            const dtos: AuthorReplyDto[] = await AppDb.instance.withTransaction((session) => {
-                return AuthorService.instance.findAllAuthors(session);
+                return AuthorService.instance.findAllAuthors(session, request.body);
             });
 
             reply.status(200).send(dtos);

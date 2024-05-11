@@ -28,6 +28,8 @@ export const ApiMessages = {
         ONLY_LATIN_CHARS_FOR_BIOGRAPHY: "only_latin_chars_for_biography",
         INVALID_NATIONALITY: "invalid_nationality",
         CANNOT_CREATE_AUTHOR: "cannot_create_author",
+        PAGE_NOT_NUMBER: "page_not_number",
+        LIMIT_NOT_NUMBER: "limit_not_number",
     },
     BOOK: {
         TITLE_NOT_STRING: "title_not_string",

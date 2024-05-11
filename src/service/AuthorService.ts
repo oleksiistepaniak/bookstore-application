@@ -1,12 +1,12 @@
 import {ClientSession} from "mongodb";
 import {CreateAuthorDto} from "../dto/author/CreateAuthorDto";
 import {AuthorReplyDto} from "../dto/author/AuthorReplyDto";
-import {AuthorRepository} from "../repository/AuthorRepository";
+import {AuthorRepository, IAuthorFilter} from "../repository/AuthorRepository";
 import {AuthorModel} from "../model/AuthorModel";
 import {ApiError} from "../error/ApiError";
 import {ApiMessages} from "../util/ApiMessages";
-import {NationalityDto} from "../dto/author/NationalityDto";
 import {ENationality} from "../interfaces";
+import {FindAllAuthorDto} from "../dto/author/FindAllAuthorDto";
 
 export class AuthorService {
     private static _instance: AuthorService;
@@ -34,18 +34,19 @@ export class AuthorService {
         return authorModel.mapToDto();
     }
 
-    async findAuthorsByNationality(session: ClientSession, dto: NationalityDto): Promise<AuthorReplyDto[]> {
-        const authorRepo = AuthorRepository.instance;
-        const nationality = dto.nationality as ENationality;
-
-        const authors = await authorRepo.findAuthorsByNationality(session, nationality);
-        return authors.map(it => it.mapToDto());
-    }
-
-    async findAllAuthors(session: ClientSession): Promise<AuthorReplyDto[]> {
+    async findAllAuthors(session: ClientSession, dto: FindAllAuthorDto): Promise<AuthorReplyDto[]> {
         const authorRepo = AuthorRepository.instance;
 
-        const authors = await authorRepo.findAllAuthors(session);
+        const filter: IAuthorFilter = {
+            page: dto.page,
+            limit: dto.limit,
+            name: dto.name,
+            surname: dto.surname,
+            biography: dto.biography,
+            nationality: dto.nationality ? dto.nationality as ENationality : undefined,
+        };
+
+        const authors = await authorRepo.findAllAuthors(session, filter);
         return authors.map(it => it.mapToDto());
     }
 }

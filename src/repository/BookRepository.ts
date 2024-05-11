@@ -66,7 +66,10 @@ export class BookRepository {
             query.authorsIds = { $in: filter.authorsIds };
         }
 
-        const books = await db.booksCollection.find(query, { session }).skip(skip).limit(limit).toArray();
+        const books = await db.booksCollection.find(query, { session })
+            .skip(skip)
+            .limit(limit)
+            .toArray();
 
         return books.map(it => new BookModel(it));
     }
