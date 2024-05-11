@@ -356,6 +356,119 @@ describe("find.all.authors.test", () => {
         should(reply.status).deepEqual(200);
     });
 
+    it("success with limit and page", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                limit: 2,
+                page: 3,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...validCreateAuthorDtoFive,
+                id: reply.body[0].id,
+            },
+            {
+                ...validCreateAuthorDtoSix,
+                id: reply.body[1].id,
+            }
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with name and surname", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                name: "etr",
+                surname: "avch",
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...validCreateAuthorDto,
+                id: reply.body[0].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with name, surname, page and limit", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                name: "etr",
+                surname: "avch",
+                page: 1,
+                limit: 1,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...validCreateAuthorDto,
+                id: reply.body[0].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with name, surname, biography", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                name: "etr",
+                surname: "avch",
+                biography: "UKRAINIAN AUTHOR",
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...validCreateAuthorDto,
+                id: reply.body[0].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with name, biography and nationality", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                name: "etr",
+                biography: "UKRAINIAN AUTHOR",
+                nationality: "Ukrainian",
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...validCreateAuthorDto,
+                id: reply.body[0].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
     it("success without params", async () => {
         const server = app.server;
 
