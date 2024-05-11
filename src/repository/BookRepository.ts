@@ -34,14 +34,6 @@ export class BookRepository {
         await db.booksCollection.insertOne(book.data, { session });
     }
 
-    async findBooksByCategory(session: ClientSession, category: EBookCategory): Promise<BookModel[]> {
-        const db = AppDb.instance;
-
-        const books = await db.booksCollection.find({ category }, { session }).toArray();
-
-        return books.map(it => new BookModel(it));
-    }
-
     async findAllBooks(session: ClientSession, filter: IBookFilter): Promise<BookModel[]> {
         const db = AppDb.instance;
         const limit = filter.limit ?? 10;

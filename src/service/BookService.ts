@@ -7,7 +7,6 @@ import {BookRepository, IBookFilter} from "../repository/BookRepository";
 import {BookModel} from "../model/BookModel";
 import {ApiError} from "../error/ApiError";
 import {BookReplyDto} from "../dto/book/BookReplyDto";
-import {CategoryDto} from "../dto/book/CategoryDto";
 import {EBookCategory} from "../interfaces";
 import {FindAllBookDto} from "../dto/book/FindAllBookDto";
 
@@ -43,14 +42,6 @@ export class BookService {
         }
 
         return bookModel.mapToDto();
-    }
-
-    async findBooksByCategory(session: ClientSession, dto: CategoryDto): Promise<BookReplyDto[]> {
-        const bookRepo = BookRepository.instance;
-        const category = dto.category as EBookCategory;
-
-        const books = await bookRepo.findBooksByCategory(session, category);
-        return books.map(it => it.mapToDto());
     }
 
     async findAllBooks(session: ClientSession, dto: FindAllBookDto): Promise<BookReplyDto[]> {
