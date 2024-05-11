@@ -5,4 +5,6 @@ export interface FindAllBookDto {
     description?: string;
     minNumberOfPages?: number;
     maxNumberOfPages?: number;
+    authorsIds?: string[];
+    category?: string;
 }

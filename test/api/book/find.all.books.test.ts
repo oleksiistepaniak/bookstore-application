@@ -510,6 +510,114 @@ describe("find.all.books.test", () => {
         should(reply.status).deepEqual(200);
     });
 
+    it("success with only authorsIds", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                authorsIds: [validAuthorIdTwo.toString()]
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...firstCreateBookDto,
+                id: reply.body[0].id,
+            },
+            {
+                ...fifthCreateBookDto,
+                id: reply.body[1].id,
+            },
+            {
+                ...sixthCreateBookDto,
+                id: reply.body[2].id,
+            },
+            {
+                ...eighthCreateBookDto,
+                id: reply.body[3].id,
+            },
+            {
+                ...ninthCreateBookDto,
+                id: reply.body[4].id,
+            },
+            {
+                ...tenthCreateBookDto,
+                id: reply.body[5].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with authorsIds, limit and page", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                authorsIds: [validAuthorIdTwo.toString()],
+                limit: 2,
+                page: 2,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...sixthCreateBookDto,
+                id: reply.body[0].id,
+            },
+            {
+                ...eighthCreateBookDto,
+                id: reply.body[1].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with only category", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                category: EBookCategory.BIOGRAPHY.toString(),
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...thirdCreateBookDto,
+                id: reply.body[0].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with category, title and description", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/all")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                title: "SHEVCHENKO",
+                description: "1814",
+                category: EBookCategory.BIOGRAPHY.toString(),
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual([
+            {
+                ...thirdCreateBookDto,
+                id: reply.body[0].id,
+            },
+        ]);
+        should(reply.status).deepEqual(200);
+    });
+
     it("success without params", async () => {
         const server = app.server;
 

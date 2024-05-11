@@ -1,4 +1,4 @@
-import {ClientSession} from "mongodb";
+import {ClientSession, ObjectId} from "mongodb";
 import {BookModel} from "../model/BookModel";
 import {AppDb} from "../db/AppDb";
 import {EBookCategory} from "../interfaces";
@@ -10,6 +10,8 @@ export interface IBookFilter {
     description?: string;
     minNumberOfPages?: number;
     maxNumberOfPages?: number;
+    category?: EBookCategory;
+    authorsIds?: ObjectId[];
 }
 
 export class BookRepository {
@@ -62,6 +64,14 @@ export class BookRepository {
             query.numberOfPages = { $gte: filter.minNumberOfPages };
         } else if (filter.maxNumberOfPages) {
             query.numberOfPages = { $lte: filter.maxNumberOfPages };
+        }
+
+        if (filter.category) {
+            query.category = filter.category;
+        }
+
+        if (filter.authorsIds && filter.authorsIds.length !== 0) {
+            query.authorsIds = { $in: filter.authorsIds };
         }
 
         const books = await db.booksCollection.find(query, { session }).skip(skip).limit(limit).toArray();
