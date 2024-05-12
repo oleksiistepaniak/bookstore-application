@@ -37,6 +37,22 @@ export class AuthorModel {
         return this._data.biography;
     }
 
+    set name(name: string) {
+        this._data.name = name;
+    }
+
+    set surname(surname: string) {
+        this._data.surname = surname;
+    }
+
+    set nationality(nationality: ENationality) {
+        this._data.nationality = nationality;
+    }
+
+    set biography(biography: string) {
+        this._data.biography = biography;
+    }
+
     static create(dto: CreateAuthorDto): AuthorModel {
         return new AuthorModel({
             _id: new ObjectId(),

@@ -30,6 +30,10 @@ export const ApiMessages = {
         CANNOT_CREATE_AUTHOR: "cannot_create_author",
         PAGE_NOT_NUMBER: "page_not_number",
         LIMIT_NOT_NUMBER: "limit_not_number",
+        INVALID_AUTHOR_REPLACING: "invalid_author_replacing",
+        AUTHOR_NOT_FOUND: "author_not_found",
+        INVALID_AUTHOR_ID: "invalid_author_id",
+
     },
     BOOK: {
         TITLE_NOT_STRING: "title_not_string",
