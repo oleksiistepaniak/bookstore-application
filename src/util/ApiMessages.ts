@@ -55,6 +55,9 @@ export const ApiMessages = {
         LIMIT_NOT_NUMBER: "limit_not_number",
         MAX_NUMBER_OF_PAGES_NOT_NUMBER: "max_number_of_pages_not_number",
         MIN_NUMBER_OF_PAGES_NOT_NUMBER: "min_number_of_pages_not_number",
+        BOOK_NOT_FOUND: "book_not_found",
+        INVALID_BOOK_ID: "invalid_book_id",
+        INVALID_BOOK_REPLACING: "invalid_book_replacing",
     },
     AUTH_MIDDLEWARE: {
         TOKEN_NOT_PROVIDED: "token_not_provided",

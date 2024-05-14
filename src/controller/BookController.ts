@@ -10,6 +10,7 @@ import {BookService} from "../service/BookService";
 import {ApiError} from "../error/ApiError";
 import {ObjectId} from "mongodb";
 import {FindAllBookDto} from "../dto/book/FindAllBookDto";
+import {ReplaceBookDto} from "../dto/book/ReplaceBookDto";
 
 export class BookController {
     private static _instance: BookController;
@@ -86,6 +87,60 @@ export class BookController {
             });
 
             reply.status(200).send(dtos);
+        } catch (error) {
+            const apiError = error as ApiError;
+            reply.status(400).send({
+                message: apiError.message,
+            });
+            return;
+        }
+    }
+
+    async replaceBook(request: FastifyRequest<{ Body: ReplaceBookDto }>, reply: FastifyReply): Promise<void> {
+        try {
+            const { id, title, description, numberOfPages, category, authorsIds } = request.body;
+
+            isOptionalString(title, ApiMessages.BOOK.TITLE_NOT_STRING);
+            isOptionalString(description, ApiMessages.BOOK.DESCRIPTION_NOT_STRING);
+            isOptionalString(category, ApiMessages.BOOK.CATEGORY_NOT_STRING);
+            isOptionalNumber(numberOfPages, ApiMessages.BOOK.NUMBER_OF_PAGES_NOT_NUMBER);
+            check(ObjectId.isValid(id), ApiMessages.BOOK.INVALID_BOOK_ID);
+            check(Boolean(title || description || numberOfPages || category || authorsIds),
+                ApiMessages.BOOK.INVALID_BOOK_REPLACING);
+
+            if (title) {
+                check(title.length >= Constants.BOOK.MIN_TITLE_LENGTH
+                    && title.length <= Constants.BOOK.MAX_TITLE_LENGTH, ApiMessages.BOOK.INVALID_TITLE_LENGTH);
+                check(Constants.LATIN_WITH_ONLY_SYMBOLS_REGEXP.test(title), ApiMessages.BOOK.ONLY_LATIN_CHARS_FOR_TITLE);
+            }
+
+            if (description) {
+                check(description.length >= Constants.BOOK.MIN_DESCRIPTION_LENGTH
+                    && description.length <= Constants.BOOK.MAX_DESCRIPTION_LENGTH, ApiMessages.BOOK.INVALID_DESCRIPTION_LENGTH);
+                check(Constants.LATIN_WITH_ONLY_SYMBOLS_REGEXP.test(description), ApiMessages.BOOK.ONLY_LATIN_CHARS_FOR_DESCRIPTION);
+            }
+
+            if (category) {
+                check(Object.keys(EBookCategory).includes(category.toUpperCase()), ApiMessages.BOOK.INVALID_CATEGORY);
+            }
+
+            if (numberOfPages) {
+                check(numberOfPages >= Constants.BOOK.MIN_NUMBER_OF_PAGES
+                    && numberOfPages <= Constants.BOOK.MAX_NUMBER_OF_PAGES, ApiMessages.BOOK.INVALID_NUMBER_OF_PAGES);
+            }
+
+            if (authorsIds) {
+                for (const authorId of authorsIds) {
+                    isString(authorId, ApiMessages.BOOK.AUTHOR_ID_NOT_STRING);
+                    check(ObjectId.isValid(authorId), ApiMessages.BOOK.INVALID_AUTHOR_ID);
+                }
+            }
+
+            const dto: BookReplyDto = await AppDb.instance.withTransaction((session) => {
+                return BookService.instance.replaceBook(session, request.body);
+            });
+
+            reply.status(200).send(dto);
         } catch (error) {
             const apiError = error as ApiError;
             reply.status(400).send({

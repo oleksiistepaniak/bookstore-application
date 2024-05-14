@@ -9,6 +9,7 @@ import {ApiError} from "../error/ApiError";
 import {BookReplyDto} from "../dto/book/BookReplyDto";
 import {EBookCategory} from "../interfaces";
 import {FindAllBookDto} from "../dto/book/FindAllBookDto";
+import {ReplaceBookDto} from "../dto/book/ReplaceBookDto";
 
 export class BookService {
     private static _instance: BookService;
@@ -60,5 +61,48 @@ export class BookService {
 
         const books = await bookRepo.findAllBooks(session, filter);
         return books.map(it => it.mapToDto());
+    }
+
+    async replaceBook(session: ClientSession, dto: ReplaceBookDto): Promise<BookReplyDto> {
+        const bookRepo = BookRepository.instance;
+        const authorRepo = AuthorRepository.instance;
+
+        const foundBook = await bookRepo.findBookById(session, new ObjectId(dto.id));
+        if (!foundBook) {
+            throw new ApiError(ApiMessages.BOOK.BOOK_NOT_FOUND);
+        }
+
+        if (dto.title) {
+            foundBook.title = dto.title;
+        }
+
+        if (dto.description) {
+            foundBook.description = dto.description;
+        }
+
+        if (dto.numberOfPages) {
+            foundBook.numberOfPages = dto.numberOfPages;
+        }
+
+        if (dto.category) {
+            const category = dto.category as EBookCategory;
+            foundBook.category = category;
+        }
+
+        if (dto.authorsIds) {
+            const authorsIds: ObjectId[] = [];
+            for (const authorId of dto.authorsIds) {
+                const id = new ObjectId(authorId);
+                const foundAuthor = await authorRepo.findAuthorById(session, id);
+                if (!foundAuthor) {
+                    throw new ApiError(ApiMessages.BOOK.AUTHOR_NOT_FOUND);
+                }
+                authorsIds.push(id);
+            }
+            foundBook.authorsIds = authorsIds;
+        }
+
+        await bookRepo.replaceBook(session, foundBook);
+        return foundBook.mapToDto();
     }
 }

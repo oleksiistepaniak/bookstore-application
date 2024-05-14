@@ -54,29 +54,29 @@ export class AuthorService {
     async replaceAuthor(session: ClientSession, dto: ReplaceAuthorDto): Promise<AuthorReplyDto> {
         const authorRepo = AuthorRepository.instance;
 
-        const author = await authorRepo.findAuthorById(session, new ObjectId(dto.id));
-        if (!author) {
+        const foundAuthor = await authorRepo.findAuthorById(session, new ObjectId(dto.id));
+        if (!foundAuthor) {
             throw new ApiError(ApiMessages.AUTHOR.AUTHOR_NOT_FOUND);
         }
 
         if (dto.name) {
-            author.name = dto.name;
+            foundAuthor.name = dto.name;
         }
 
         if (dto.surname) {
-            author.surname = dto.surname;
+            foundAuthor.surname = dto.surname;
         }
 
         if (dto.nationality) {
             const nationality = dto.nationality as ENationality;
-            author.nationality = nationality;
+            foundAuthor.nationality = nationality;
         }
 
         if (dto.biography) {
-            author.biography = dto.biography;
+            foundAuthor.biography = dto.biography;
         }
 
-        await authorRepo.replaceAuthor(session, author);
-        return author.mapToDto();
+        await authorRepo.replaceAuthor(session, foundAuthor);
+        return foundAuthor.mapToDto();
     }
 }

@@ -75,7 +75,6 @@ export class AuthorRepository {
     async replaceAuthor(session: ClientSession, author: AuthorModel): Promise<void> {
         const db = AppDb.instance;
 
-        await db.authorsCollection.findOneAndReplace({_id: author.id}, author.data,
-            { session });
+        await db.authorsCollection.replaceOne({_id: author.id}, author.data, { session });
     }
 }

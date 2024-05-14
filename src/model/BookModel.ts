@@ -41,6 +41,26 @@ export class BookModel {
         return this._data.authorsIds;
     }
 
+    set title(title: string) {
+        this._data.title = title;
+    }
+
+    set description(description: string) {
+        this._data.description = description;
+    }
+
+    set numberOfPages(numberOfPages: number) {
+        this._data.numberOfPages = numberOfPages;
+    }
+
+    set category(category: EBookCategory) {
+        this._data.category = category;
+    }
+
+    set authorsIds(authorsIds: ObjectId[]) {
+        this._data.authorsIds = authorsIds;
+    }
+
     static create(dto: CreateBookDto): BookModel {
         return new BookModel({
             _id: new ObjectId(),

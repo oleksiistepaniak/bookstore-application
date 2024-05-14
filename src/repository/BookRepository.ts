@@ -34,6 +34,14 @@ export class BookRepository {
         await db.booksCollection.insertOne(book.data, { session });
     }
 
+    async findBookById(session: ClientSession, id: ObjectId): Promise<BookModel | null> {
+        const db = AppDb.instance;
+
+        const book = await db.booksCollection.findOne({ _id: id }, { session });
+
+        return book ? new BookModel(book) : null;
+    }
+
     async findAllBooks(session: ClientSession, filter: IBookFilter): Promise<BookModel[]> {
         const db = AppDb.instance;
         const limit = filter.limit ?? 10;
@@ -72,6 +80,12 @@ export class BookRepository {
             .toArray();
 
         return books.map(it => new BookModel(it));
+    }
+
+    async replaceBook(session: ClientSession, book: BookModel): Promise<void> {
+        const db = AppDb.instance;
+
+        await db.booksCollection.replaceOne({ _id: book.id }, book.data, { session });
     }
 
 }

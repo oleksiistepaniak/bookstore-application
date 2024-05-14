@@ -163,7 +163,7 @@ describe("replace.author.test", () => {
         should(reply.status).deepEqual(400);
     });
 
-    it("invalid id", async () => {
+    it("invalid author id", async () => {
         const server = app.server;
 
         const reply = await request(server)
