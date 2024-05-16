@@ -38,6 +38,9 @@ describe("replace.book.test", () => {
         await setUser(userModel);
         const tokenReplyDto = await getValidToken();
         validToken = tokenReplyDto.token;
+    });
+
+    beforeEach(async () => {
         const firstAuthor = AuthorModel.create(validCreateAuthorDto);
         const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo);
         await setAuthor(firstAuthor);
@@ -55,6 +58,11 @@ describe("replace.book.test", () => {
         const bookModel = BookModel.create(validCreateBookDto);
         await setBook(bookModel);
         validBookId = bookModel.id;
+    });
+
+    afterEach(async () => {
+        await clearAuthors();
+        await clearBooks();
     });
 
     after(async () => {
@@ -494,5 +502,248 @@ describe("replace.book.test", () => {
             message: ApiMessages.BOOK.AUTHOR_NOT_FOUND,
         });
         should(reply.status).deepEqual(400);
+    });
+
+    it("success with title", async () => {
+        const server = app.server;
+        const title = "a".repeat(Constants.BOOK.MIN_TITLE_LENGTH);
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                title,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            title,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with description", async () => {
+        const server = app.server;
+        const description = "a".repeat(Constants.BOOK.MIN_DESCRIPTION_LENGTH);
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                description,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            description,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with category", async () => {
+        const server = app.server;
+        const category = EBookCategory.BUSINESS.toString();
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                category,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            category,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with number of pages", async () => {
+        const server = app.server;
+        const numberOfPages = Constants.BOOK.MIN_NUMBER_OF_PAGES;
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                numberOfPages,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            numberOfPages,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with authorsIds", async () => {
+        const server = app.server;
+        const authorsIds = [validAuthorId.toString(), validAuthorIdTwo.toString()];
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                authorsIds,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            authorsIds,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with title and description", async () => {
+        const server = app.server;
+        const title = "a".repeat(Constants.BOOK.MIN_TITLE_LENGTH);
+        const description = "a".repeat(Constants.BOOK.MIN_DESCRIPTION_LENGTH);
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                title,
+                description,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            title,
+            description,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with title, description and authorsIds", async () => {
+        const server = app.server;
+        const title = "a".repeat(Constants.BOOK.MIN_TITLE_LENGTH);
+        const description = "a".repeat(Constants.BOOK.MIN_DESCRIPTION_LENGTH);
+        const authorsIds = [validAuthorId.toString(), validAuthorIdTwo.toString()];
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                title,
+                description,
+                authorsIds,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            title,
+            description,
+            authorsIds,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with category and numberOfPages", async () => {
+        const server = app.server;
+        const category = EBookCategory.MYSTERY.toString();
+        const numberOfPages = Constants.BOOK.MIN_NUMBER_OF_PAGES;
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                category,
+                numberOfPages,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            category,
+            numberOfPages,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with description, category, numberOfPages and authorsIds", async () => {
+        const server = app.server;
+        const category = EBookCategory.MYSTERY.toString();
+        const numberOfPages = Constants.BOOK.MIN_NUMBER_OF_PAGES;
+        const description = "a".repeat(Constants.BOOK.MIN_DESCRIPTION_LENGTH);
+        const authorsIds = [validAuthorId.toString(), validAuthorIdTwo.toString()];
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                category,
+                numberOfPages,
+                description,
+                authorsIds,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            category,
+            numberOfPages,
+            description,
+            authorsIds,
+        });
+        should(reply.status).deepEqual(200);
+    });
+
+    it("success with all params", async () => {
+        const server = app.server;
+        const category = EBookCategory.MYSTERY.toString();
+        const numberOfPages = Constants.BOOK.MIN_NUMBER_OF_PAGES;
+        const title = "a".repeat(Constants.BOOK.MIN_TITLE_LENGTH);
+        const description = "a".repeat(Constants.BOOK.MIN_DESCRIPTION_LENGTH);
+        const authorsIds = [validAuthorId.toString(), validAuthorIdTwo.toString()];
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${validToken}`)
+            .send({
+                id: validBookId,
+                category,
+                numberOfPages,
+                description,
+                authorsIds,
+                title,
+            })
+            .expect(200);
+
+        should(reply.body).deepEqual({
+            ...validCreateBookDto,
+            id: reply.body.id,
+            category,
+            numberOfPages,
+            description,
+            authorsIds,
+            title,
+        });
+        should(reply.status).deepEqual(200);
     });
 });
