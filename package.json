@@ -2,7 +2,7 @@
   "name": "bookstore-application",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "tsc && node dist/src/index.js",
     "test": "set IS_TEST=true&& mocha -r ts-node/register test/**/*.test.ts"
