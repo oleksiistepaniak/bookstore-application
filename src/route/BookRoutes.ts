@@ -17,4 +17,9 @@ export default async function bookRoutes() {
         preHandler: authenticationMiddleware,
         handler: BookController.instance.replaceBook,
     });
+
+    app.post("/api/book/remove", {
+        preHandler: authenticationMiddleware,
+        handler: BookController.instance.removeBook,
+    });
 }

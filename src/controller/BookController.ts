@@ -11,6 +11,7 @@ import {ApiError} from "../error/ApiError";
 import {ObjectId} from "mongodb";
 import {FindAllBookDto} from "../dto/book/FindAllBookDto";
 import {ReplaceBookDto} from "../dto/book/ReplaceBookDto";
+import {RemoveBookDto} from "../dto/book/RemoveBookDto";
 
 export class BookController {
     private static _instance: BookController;
@@ -138,6 +139,26 @@ export class BookController {
 
             const dto: BookReplyDto = await AppDb.instance.withTransaction((session) => {
                 return BookService.instance.replaceBook(session, request.body);
+            });
+
+            reply.status(200).send(dto);
+        } catch (error) {
+            const apiError = error as ApiError;
+            reply.status(400).send({
+                message: apiError.message,
+            });
+            return;
+        }
+    }
+
+    async removeBook(request: FastifyRequest<{ Body: RemoveBookDto }>, reply: FastifyReply): Promise<void> {
+        try {
+            const { id } = request.body;
+
+            check(ObjectId.isValid(id), ApiMessages.BOOK.INVALID_BOOK_ID);
+
+            const dto: BookReplyDto = await AppDb.instance.withTransaction((session) => {
+                return BookService.instance.removeBook(session, request.body);
             });
 
             reply.status(200).send(dto);

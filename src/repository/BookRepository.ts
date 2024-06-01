@@ -88,4 +88,9 @@ export class BookRepository {
         await db.booksCollection.replaceOne({ _id: book.id }, book.data, { session });
     }
 
+    async removeBook(session: ClientSession, book: BookModel): Promise<void> {
+        const db = AppDb.instance;
+
+        await db.booksCollection.deleteOne({_id: book.id}, { session });
+    }
 }

@@ -17,6 +17,7 @@ export default async function authorRoutes() {
         preHandler: authenticationMiddleware,
         handler: AuthorController.instance.replaceAuthor,
     });
+
     app.post("/api/author/remove", {
         preHandler: authenticationMiddleware,
         handler: AuthorController.instance.removeAuthor,

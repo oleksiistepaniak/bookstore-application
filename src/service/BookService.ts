@@ -10,6 +10,7 @@ import {BookReplyDto} from "../dto/book/BookReplyDto";
 import {EBookCategory} from "../interfaces";
 import {FindAllBookDto} from "../dto/book/FindAllBookDto";
 import {ReplaceBookDto} from "../dto/book/ReplaceBookDto";
+import {RemoveBookDto} from "../dto/book/RemoveBookDto";
 
 export class BookService {
     private static _instance: BookService;
@@ -103,6 +104,18 @@ export class BookService {
         }
 
         await bookRepo.replaceBook(session, foundBook);
+        return foundBook.mapToDto();
+    }
+
+    async removeBook(session: ClientSession, dto: RemoveBookDto): Promise<BookReplyDto> {
+        const bookRepo = BookRepository.instance;
+
+        const foundBook = await bookRepo.findBookById(session, new ObjectId(dto.id));
+        if (!foundBook) {
+            throw new ApiError(ApiMessages.BOOK.BOOK_NOT_FOUND);
+        }
+
+        await bookRepo.removeBook(session, foundBook);
         return foundBook.mapToDto();
     }
 }
