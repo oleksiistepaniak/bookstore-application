@@ -8,6 +8,7 @@ import {ApiMessages} from "../util/ApiMessages";
 import {ENationality} from "../interfaces";
 import {FindAllAuthorDto} from "../dto/author/FindAllAuthorDto";
 import {ReplaceAuthorDto} from "../dto/author/ReplaceAuthorDto";
+import {RemoveAuthorDto} from "../dto/author/RemoveAuthorDto";
 
 export class AuthorService {
     private static _instance: AuthorService;
@@ -77,6 +78,18 @@ export class AuthorService {
         }
 
         await authorRepo.replaceAuthor(session, foundAuthor);
+        return foundAuthor.mapToDto();
+    }
+
+    async removeAuthor(session: ClientSession, dto: RemoveAuthorDto): Promise<AuthorReplyDto> {
+        const authorRepo = AuthorRepository.instance;
+
+        const foundAuthor = await authorRepo.findAuthorById(session, new ObjectId(dto.id));
+        if (!foundAuthor) {
+            throw new ApiError(ApiMessages.AUTHOR.AUTHOR_NOT_FOUND);
+        }
+
+        await authorRepo.removeAuthor(session, foundAuthor);
         return foundAuthor.mapToDto();
     }
 }

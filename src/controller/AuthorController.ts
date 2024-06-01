@@ -11,6 +11,7 @@ import {ENationality} from "../interfaces";
 import {FindAllAuthorDto} from "../dto/author/FindAllAuthorDto";
 import {ReplaceAuthorDto} from "../dto/author/ReplaceAuthorDto";
 import {ObjectId} from "mongodb";
+import {RemoveAuthorDto} from "../dto/author/RemoveAuthorDto";
 
 export class AuthorController {
     private static _instance: AuthorController;
@@ -118,6 +119,26 @@ export class AuthorController {
 
             const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
                 return AuthorService.instance.replaceAuthor(session, request.body);
+            });
+
+            reply.status(200).send(dto);
+        } catch (error) {
+            const apiError = error as ApiError;
+            reply.status(400).send({
+                message: apiError.message,
+            });
+            return;
+        }
+    }
+
+    async removeAuthor(request: FastifyRequest<{ Body: RemoveAuthorDto }>, reply: FastifyReply): Promise<void> {
+        try {
+            const { id } = request.body;
+
+            check(ObjectId.isValid(id), ApiMessages.AUTHOR.INVALID_AUTHOR_ID);
+
+            const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
+                return AuthorService.instance.removeAuthor(session, request.body);
             });
 
             reply.status(200).send(dto);
