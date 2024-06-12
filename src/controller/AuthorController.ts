@@ -118,7 +118,7 @@ export class AuthorController {
             }
 
             const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
-                return AuthorService.instance.replaceAuthor(session, request.body);
+                return AuthorService.instance.replaceAuthor(session, request.body, request.user.id);
             });
 
             reply.status(200).send(dto);

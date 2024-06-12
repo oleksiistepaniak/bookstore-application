@@ -5,9 +5,9 @@ import {
     dispose,
     getValidToken,
     init, setAuthor,
-    setUser,
+    setUser, validAuthenticationDto, validAuthenticationDtoTwo,
     validCreateAuthorDto,
-    validCreateUserDto
+    validCreateUserDto, validCreateUserDtoTwo
 } from "../../TestHelper";
 import {UserModel} from "../../../src/model/UserModel";
 import {AuthorModel} from "../../../src/model/AuthorModel";
@@ -18,21 +18,28 @@ import {Constants} from "../../../src/constants";
 
 describe("replace.author.test", () => {
     let app: FastifyInstance;
-    let validToken: string;
+    let firstValidToken: string;
+    let validUserId: string;
+    let secondValidToken: string;
     let validAuthorId: string;
     const nonExistsAuthorId = "663d343828ab341641086570";
 
     before(async () => {
         app = await init();
         await clearUsers();
-        const userModel = UserModel.create(validCreateUserDto);
-        await setUser(userModel);
-        const tokenReplyDto = await getValidToken();
-        validToken = tokenReplyDto.token;
+        const firstUser = UserModel.create(validCreateUserDto);
+        await setUser(firstUser);
+        const secondUser = UserModel.create(validCreateUserDtoTwo);
+        await setUser(secondUser);
+        validUserId = firstUser.id.toString();
+        const tokenReplyDto = await getValidToken(validAuthenticationDto);
+        firstValidToken = tokenReplyDto.token;
+        const secondToken = await getValidToken(validAuthenticationDtoTwo);
+        secondValidToken = secondToken.token;
     });
 
     beforeEach(async () => {
-        const authorModel = AuthorModel.create(validCreateAuthorDto);
+        const authorModel = AuthorModel.create(validCreateAuthorDto, validUserId);
         await setAuthor(authorModel);
         validAuthorId = authorModel.id.toString();
     });
@@ -79,7 +86,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
             })
@@ -96,7 +103,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 name: true,
@@ -114,7 +121,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 surname: true,
@@ -132,7 +139,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography: true,
@@ -150,7 +157,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 nationality: true,
@@ -168,7 +175,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: "invalid_id",
                 name: "string"
@@ -186,7 +193,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 name: ""
@@ -204,7 +211,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 surname: "",
@@ -222,7 +229,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography: "",
@@ -240,7 +247,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 nationality: "",
@@ -259,7 +266,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 name,
@@ -278,7 +285,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 name,
@@ -297,7 +304,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 name,
@@ -316,7 +323,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 surname,
@@ -335,7 +342,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 surname,
@@ -354,7 +361,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 surname,
@@ -373,7 +380,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography,
@@ -392,7 +399,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography,
@@ -411,7 +418,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography,
@@ -430,7 +437,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 nationality,
@@ -449,7 +456,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: nonExistsAuthorId,
                 nationality,
@@ -462,13 +469,32 @@ describe("replace.author.test", () => {
         should(reply.status).deepEqual(400);
     });
 
+    it("invalid user", async () => {
+        const server = app.server;
+        const nationality = "Ukrainian";
+
+        const reply = await request(server)
+            .post("/api/author/replace")
+            .set("Authorization", `Bearer ${secondValidToken}`)
+            .send({
+                id: validAuthorId,
+                nationality,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.INVALID_USER,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
     it("success with name", async () => {
         const server = app.server;
         const name = "a".repeat(Constants.AUTHOR.MIN_NAME_LENGTH);
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 name,
@@ -479,6 +505,7 @@ describe("replace.author.test", () => {
             ...validCreateAuthorDto,
             name,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -489,7 +516,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 surname,
@@ -500,6 +527,7 @@ describe("replace.author.test", () => {
             ...validCreateAuthorDto,
             surname,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -510,7 +538,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography,
@@ -521,6 +549,7 @@ describe("replace.author.test", () => {
             ...validCreateAuthorDto,
             biography,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -531,7 +560,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 nationality,
@@ -542,6 +571,7 @@ describe("replace.author.test", () => {
             ...validCreateAuthorDto,
             nationality,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -553,7 +583,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 name,
@@ -566,6 +596,7 @@ describe("replace.author.test", () => {
             name,
             surname,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -577,7 +608,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography,
@@ -590,6 +621,7 @@ describe("replace.author.test", () => {
             biography,
             nationality,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -603,7 +635,7 @@ describe("replace.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
                 biography,
@@ -620,6 +652,7 @@ describe("replace.author.test", () => {
             name,
             surname,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });

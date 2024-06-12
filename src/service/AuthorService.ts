@@ -10,6 +10,7 @@ import {FindAllAuthorDto} from "../dto/author/FindAllAuthorDto";
 import {ReplaceAuthorDto} from "../dto/author/ReplaceAuthorDto";
 import {RemoveAuthorDto} from "../dto/author/RemoveAuthorDto";
 import {UserRepository} from "../repository/UserRepository";
+import {check} from "../util/ApiCheck";
 
 export class AuthorService {
     private static _instance: AuthorService;
@@ -30,10 +31,7 @@ export class AuthorService {
         const userRepo = UserRepository.instance;
 
         const userCreator = await userRepo.findUserById(session, new ObjectId(userId));
-
-        if (!userCreator) {
-            throw new ApiError(ApiMessages.AUTHOR.INVALID_USER);
-        }
+        check(userCreator, ApiMessages.AUTHOR.INVALID_USER);
 
         const authorModel = AuthorModel.create(dto, userId);
         try {
@@ -60,13 +58,17 @@ export class AuthorService {
         return authors.map(it => it.mapToDto());
     }
 
-    async replaceAuthor(session: ClientSession, dto: ReplaceAuthorDto): Promise<AuthorReplyDto> {
+    async replaceAuthor(session: ClientSession, dto: ReplaceAuthorDto, userId: string): Promise<AuthorReplyDto> {
         const authorRepo = AuthorRepository.instance;
+        const userRepo = UserRepository.instance;
+
+        const userReplacer = await userRepo.findUserById(session, new ObjectId(userId));
+        check(userReplacer, ApiMessages.AUTHOR.INVALID_USER);
 
         const foundAuthor = await authorRepo.findAuthorById(session, new ObjectId(dto.id));
-        if (!foundAuthor) {
-            throw new ApiError(ApiMessages.AUTHOR.AUTHOR_NOT_FOUND);
-        }
+        check(foundAuthor, ApiMessages.AUTHOR.AUTHOR_NOT_FOUND);
+
+        check(foundAuthor.userCreatorId === userReplacer.id.toString(), ApiMessages.AUTHOR.INVALID_USER);
 
         if (dto.name) {
             foundAuthor.name = dto.name;

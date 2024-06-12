@@ -24,9 +24,22 @@ export const validCreateUserDto: CreateUserDto = {
     lastName: "Stepaniak",
 };
 
+export const validCreateUserDtoTwo: CreateUserDto = {
+    email: "bob@gmail.com",
+    password: "bobBOB228",
+    age: 30,
+    firstName: "Bob",
+    lastName: "Bobson",
+};
+
 export const validAuthenticationDto: AuthenticationDto = {
     email: "alex@gmail.com",
     password: "alexALEX228",
+};
+
+export const validAuthenticationDtoTwo: AuthenticationDto = {
+    email: "bob@gmail.com",
+    password: "bobBOB228",
 };
 
 export const validCreateAuthorDto: CreateAuthorDto = {
@@ -165,8 +178,8 @@ export async function init(): Promise<FastifyInstance> {
     return test_app;
 }
 
-export async function getValidToken(): Promise<TokenReplyDto> {
-    const replyDto = await AuthenticationService.instance.signin(Constants.NO_SESSION, validAuthenticationDto);
+export async function getValidToken(dto: AuthenticationDto): Promise<TokenReplyDto> {
+    const replyDto = await AuthenticationService.instance.signin(Constants.NO_SESSION, dto);
     return replyDto;
 }
 
