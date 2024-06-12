@@ -7,7 +7,7 @@ import {
     clearUsers, dispose,
     getValidToken,
     init, setAuthor, setBook,
-    setUser,
+    setUser, validAuthenticationDto,
     validCreateAuthorDto, validCreateAuthorDtoTwo,
     validCreateUserDto
 } from "../../TestHelper";
@@ -22,6 +22,7 @@ import {ApiMessages} from "../../../src/util/ApiMessages";
 describe("find.all.books.test", () => {
     let app: FastifyInstance;
     let validToken: string;
+    let validUserId: string;
     let validAuthorId: ObjectId;
     let validAuthorIdTwo: ObjectId;
     let firstCreateBookDto: CreateBookDto;
@@ -42,10 +43,11 @@ describe("find.all.books.test", () => {
         await clearAuthors();
         const userModel = UserModel.create(validCreateUserDto);
         await setUser(userModel);
-        const tokenReplyDto = await getValidToken();
+        validUserId = userModel.id.toString();
+        const tokenReplyDto = await getValidToken(validAuthenticationDto);
         validToken = tokenReplyDto.token;
-        const firstAuthor = AuthorModel.create(validCreateAuthorDto);
-        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo);
+        const firstAuthor = AuthorModel.create(validCreateAuthorDto, validUserId);
+        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo, validUserId);
         await setAuthor(firstAuthor);
         await setAuthor(secondAuthor);
         validAuthorId = firstAuthor.id;
@@ -121,25 +123,25 @@ describe("find.all.books.test", () => {
             numberOfPages: 320,
             authorsIds: [validAuthorIdTwo.toString()],
         };
-        const firstBook = BookModel.create(firstCreateBookDto);
+        const firstBook = BookModel.create(firstCreateBookDto, validUserId);
         await setBook(firstBook);
-        const secondBook = BookModel.create(secondCreateBookDto);
+        const secondBook = BookModel.create(secondCreateBookDto, validUserId);
         await setBook(secondBook);
-        const thirdBook = BookModel.create(thirdCreateBookDto);
+        const thirdBook = BookModel.create(thirdCreateBookDto, validUserId);
         await setBook(thirdBook);
-        const fourthBook = BookModel.create(fourthCreateBookDto);
+        const fourthBook = BookModel.create(fourthCreateBookDto, validUserId);
         await setBook(fourthBook);
-        const fifthBook = BookModel.create(fifthCreateBookDto);
+        const fifthBook = BookModel.create(fifthCreateBookDto, validUserId);
         await setBook(fifthBook);
-        const sixthBook = BookModel.create(sixthCreateBookDto);
+        const sixthBook = BookModel.create(sixthCreateBookDto, validUserId);
         await setBook(sixthBook);
-        const seventhBook = BookModel.create(seventhCreateBookDto);
+        const seventhBook = BookModel.create(seventhCreateBookDto, validUserId);
         await setBook(seventhBook);
-        const eighthBook = BookModel.create(eighthCreateBookDto);
+        const eighthBook = BookModel.create(eighthCreateBookDto, validUserId);
         await setBook(eighthBook);
-        const ninthBook = BookModel.create(ninthCreateBookDto);
+        const ninthBook = BookModel.create(ninthCreateBookDto, validUserId);
         await setBook(ninthBook);
-        const tenthBook = BookModel.create(tenthCreateBookDto);
+        const tenthBook = BookModel.create(tenthCreateBookDto, validUserId);
         await setBook(tenthBook);
     });
 
@@ -362,42 +364,52 @@ describe("find.all.books.test", () => {
             {
                 ...firstCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...secondCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
             {
                 ...thirdCreateBookDto,
                 id: reply.body[2].id,
+                userCreatorId: validUserId,
             },
             {
                 ...fourthCreateBookDto,
                 id: reply.body[3].id,
+                userCreatorId: validUserId,
             },
             {
                 ...fifthCreateBookDto,
                 id: reply.body[4].id,
+                userCreatorId: validUserId,
             },
             {
                 ...sixthCreateBookDto,
                 id: reply.body[5].id,
+                userCreatorId: validUserId,
             },
             {
                 ...seventhCreateBookDto,
                 id: reply.body[6].id,
+                userCreatorId: validUserId,
             },
             {
                 ...eighthCreateBookDto,
                 id: reply.body[7].id,
+                userCreatorId: validUserId,
             },
             {
                 ...ninthCreateBookDto,
                 id: reply.body[8].id,
+                userCreatorId: validUserId,
             },
             {
                 ...tenthCreateBookDto,
                 id: reply.body[9].id,
+                userCreatorId: validUserId,
             }
         ]);
         should(reply.status).deepEqual(200);
@@ -418,10 +430,12 @@ describe("find.all.books.test", () => {
             {
                 ...firstCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...secondCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -442,6 +456,7 @@ describe("find.all.books.test", () => {
             {
                 ...fourthCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -462,6 +477,7 @@ describe("find.all.books.test", () => {
             {
                 ...secondCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -482,6 +498,7 @@ describe("find.all.books.test", () => {
             {
                 ...thirdCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -502,6 +519,7 @@ describe("find.all.books.test", () => {
             {
                 ...thirdCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -523,10 +541,12 @@ describe("find.all.books.test", () => {
             {
                 ...secondCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...ninthCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -548,6 +568,7 @@ describe("find.all.books.test", () => {
             {
                 ...thirdCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -569,10 +590,12 @@ describe("find.all.books.test", () => {
             {
                 ...fifthCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...sixthCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -593,26 +616,32 @@ describe("find.all.books.test", () => {
             {
                 ...firstCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...fifthCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
             {
                 ...sixthCreateBookDto,
                 id: reply.body[2].id,
+                userCreatorId: validUserId,
             },
             {
                 ...eighthCreateBookDto,
                 id: reply.body[3].id,
+                userCreatorId: validUserId,
             },
             {
                 ...ninthCreateBookDto,
                 id: reply.body[4].id,
+                userCreatorId: validUserId,
             },
             {
                 ...tenthCreateBookDto,
                 id: reply.body[5].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -635,10 +664,12 @@ describe("find.all.books.test", () => {
             {
                 ...sixthCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...eighthCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -659,6 +690,7 @@ describe("find.all.books.test", () => {
             {
                 ...thirdCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -681,6 +713,7 @@ describe("find.all.books.test", () => {
             {
                 ...thirdCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -699,42 +732,52 @@ describe("find.all.books.test", () => {
             {
                 ...firstCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...secondCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
             {
                 ...thirdCreateBookDto,
                 id: reply.body[2].id,
+                userCreatorId: validUserId,
             },
             {
                 ...fourthCreateBookDto,
                 id: reply.body[3].id,
+                userCreatorId: validUserId,
             },
             {
                 ...fifthCreateBookDto,
                 id: reply.body[4].id,
+                userCreatorId: validUserId,
             },
             {
                 ...sixthCreateBookDto,
                 id: reply.body[5].id,
+                userCreatorId: validUserId,
             },
             {
                 ...seventhCreateBookDto,
                 id: reply.body[6].id,
+                userCreatorId: validUserId,
             },
             {
                 ...eighthCreateBookDto,
                 id: reply.body[7].id,
+                userCreatorId: validUserId,
             },
             {
                 ...ninthCreateBookDto,
                 id: reply.body[8].id,
+                userCreatorId: validUserId,
             },
             {
                 ...tenthCreateBookDto,
                 id: reply.body[9].id,
+                userCreatorId: validUserId,
             }
         ]);
         should(reply.status).deepEqual(200);
@@ -760,42 +803,52 @@ describe("find.all.books.test", () => {
             {
                 ...firstCreateBookDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...secondCreateBookDto,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
             {
                 ...thirdCreateBookDto,
                 id: reply.body[2].id,
+                userCreatorId: validUserId,
             },
             {
                 ...fourthCreateBookDto,
                 id: reply.body[3].id,
+                userCreatorId: validUserId,
             },
             {
                 ...fifthCreateBookDto,
                 id: reply.body[4].id,
+                userCreatorId: validUserId,
             },
             {
                 ...sixthCreateBookDto,
                 id: reply.body[5].id,
+                userCreatorId: validUserId,
             },
             {
                 ...seventhCreateBookDto,
                 id: reply.body[6].id,
+                userCreatorId: validUserId,
             },
             {
                 ...eighthCreateBookDto,
                 id: reply.body[7].id,
+                userCreatorId: validUserId,
             },
             {
                 ...ninthCreateBookDto,
                 id: reply.body[8].id,
+                userCreatorId: validUserId,
             },
             {
                 ...tenthCreateBookDto,
                 id: reply.body[9].id,
+                userCreatorId: validUserId,
             }
         ]);
         should(reply.status).deepEqual(200);

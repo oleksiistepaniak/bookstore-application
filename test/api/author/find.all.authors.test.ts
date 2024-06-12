@@ -6,7 +6,7 @@ import {
     getValidToken,
     init,
     setAuthor,
-    setUser,
+    setUser, validAuthenticationDto,
     validCreateAuthorDto, validCreateAuthorDtoEight,
     validCreateAuthorDtoFive,
     validCreateAuthorDtoFour,
@@ -27,33 +27,35 @@ import {ApiMessages} from "../../../src/util/ApiMessages";
 describe("find.all.authors.test", () => {
     let app: FastifyInstance;
     let validToken: string;
+    let validUserId: string;
 
     before(async () => {
         app = await init();
         await clearUsers();
         const userModel = UserModel.create(validCreateUserDto);
         await setUser(userModel);
-        const tokenReplyDto = await getValidToken();
+        validUserId = userModel.id.toString();
+        const tokenReplyDto = await getValidToken(validAuthenticationDto);
         validToken = tokenReplyDto.token;
-        const firstAuthor = AuthorModel.create(validCreateAuthorDto);
+        const firstAuthor = AuthorModel.create(validCreateAuthorDto, validUserId);
         await setAuthor(firstAuthor);
-        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo);
+        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo, validUserId);
         await setAuthor(secondAuthor);
-        const thirdAuthor = AuthorModel.create(validCreateAuthorDtoThree);
+        const thirdAuthor = AuthorModel.create(validCreateAuthorDtoThree, validUserId);
         await setAuthor(thirdAuthor);
-        const fourthAuthor = AuthorModel.create(validCreateAuthorDtoFour);
+        const fourthAuthor = AuthorModel.create(validCreateAuthorDtoFour, validUserId);
         await setAuthor(fourthAuthor);
-        const fifthAuthor = AuthorModel.create(validCreateAuthorDtoFive);
+        const fifthAuthor = AuthorModel.create(validCreateAuthorDtoFive, validUserId);
         await setAuthor(fifthAuthor);
-        const sixthAuthor = AuthorModel.create(validCreateAuthorDtoSix);
+        const sixthAuthor = AuthorModel.create(validCreateAuthorDtoSix, validUserId);
         await setAuthor(sixthAuthor);
-        const seventhAuthor = AuthorModel.create(validCreateAuthorDtoSeven);
+        const seventhAuthor = AuthorModel.create(validCreateAuthorDtoSeven, validUserId);
         await setAuthor(seventhAuthor);
-        const eighthAuthor = AuthorModel.create(validCreateAuthorDtoEight);
+        const eighthAuthor = AuthorModel.create(validCreateAuthorDtoEight, validUserId);
         await setAuthor(eighthAuthor);
-        const ninthAuthor = AuthorModel.create(validCreateAuthorDtoNine);
+        const ninthAuthor = AuthorModel.create(validCreateAuthorDtoNine, validUserId);
         await setAuthor(ninthAuthor);
-        const tenthAuthor = AuthorModel.create(validCreateAuthorDtoTen);
+        const tenthAuthor = AuthorModel.create(validCreateAuthorDtoTen, validUserId);
         await setAuthor(tenthAuthor);
     });
 
@@ -207,42 +209,52 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoTwo,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoThree,
                 id: reply.body[2].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoFour,
                 id: reply.body[3].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoFive,
                 id: reply.body[4].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoSix,
                 id: reply.body[5].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoSeven,
                 id: reply.body[6].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoEight,
                 id: reply.body[7].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoNine,
                 id: reply.body[8].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoTen,
                 id: reply.body[9].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -263,10 +275,12 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoTwo,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -287,6 +301,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -307,6 +322,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -327,6 +343,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -347,10 +364,12 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoTwo,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             }
         ]);
         should(reply.status).deepEqual(200);
@@ -372,10 +391,12 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDtoFive,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoSix,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             }
         ]);
         should(reply.status).deepEqual(200);
@@ -397,6 +418,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -420,6 +442,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -442,6 +465,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -464,6 +488,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -482,42 +507,52 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDto,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoTwo,
                 id: reply.body[1].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoThree,
                 id: reply.body[2].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoFour,
                 id: reply.body[3].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoFive,
                 id: reply.body[4].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoSix,
                 id: reply.body[5].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoSeven,
                 id: reply.body[6].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoEight,
                 id: reply.body[7].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoNine,
                 id: reply.body[8].id,
+                userCreatorId: validUserId,
             },
             {
                 ...validCreateAuthorDtoTen,
                 id: reply.body[9].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);
@@ -543,6 +578,7 @@ describe("find.all.authors.test", () => {
             {
                 ...validCreateAuthorDtoTwo,
                 id: reply.body[0].id,
+                userCreatorId: validUserId,
             },
         ]);
         should(reply.status).deepEqual(200);

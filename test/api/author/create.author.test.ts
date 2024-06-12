@@ -5,7 +5,7 @@ import {
     dispose,
     getValidToken,
     init,
-    setUser,
+    setUser, validAuthenticationDto,
     validCreateAuthorDto,
     validCreateUserDto
 } from "../../TestHelper";
@@ -26,7 +26,7 @@ describe("create.author.test", () => {
         const userModel = UserModel.create(validCreateUserDto);
         await setUser(userModel);
         validUserId = userModel.id.toString();
-        const tokenReplyDto = await getValidToken();
+        const tokenReplyDto = await getValidToken(validAuthenticationDto);
         validToken = tokenReplyDto.token;
     });
 
