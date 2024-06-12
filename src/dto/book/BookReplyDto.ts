@@ -5,4 +5,5 @@ export interface BookReplyDto {
     numberOfPages: number;
     category: string;
     authorsIds: string[];
+    userCreatorId: string;
 }

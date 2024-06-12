@@ -41,6 +41,10 @@ export class BookModel {
         return this._data.authorsIds;
     }
 
+    get userCreatorId(): string {
+        return this._data.userCreatorId.toString();
+    }
+
     set title(title: string) {
         this._data.title = title;
     }
@@ -61,7 +65,7 @@ export class BookModel {
         this._data.authorsIds = authorsIds;
     }
 
-    static create(dto: CreateBookDto): BookModel {
+    static create(dto: CreateBookDto, userId: string): BookModel {
         return new BookModel({
             _id: new ObjectId(),
             title: dto.title,
@@ -69,7 +73,7 @@ export class BookModel {
             numberOfPages: dto.numberOfPages,
             category: dto.category as unknown as EBookCategory,
             authorsIds: dto.authorsIds.map(it => new ObjectId(it)),
-            userCreatorId: new ObjectId()
+            userCreatorId: new ObjectId(userId),
         });
     }
 
@@ -81,6 +85,7 @@ export class BookModel {
             numberOfPages: this.numberOfPages,
             category: this.category.toString(),
             authorsIds: this.authorsIds.map(it => it.toString()),
+            userCreatorId: this.userCreatorId,
         };
     }
 }

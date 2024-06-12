@@ -58,6 +58,7 @@ export const ApiMessages = {
         BOOK_NOT_FOUND: "book_not_found",
         INVALID_BOOK_ID: "invalid_book_id",
         INVALID_BOOK_REPLACING: "invalid_book_replacing",
+        INVALID_USER: "invalid_user",
     },
     AUTH_MIDDLEWARE: {
         TOKEN_NOT_PROVIDED: "token_not_provided",

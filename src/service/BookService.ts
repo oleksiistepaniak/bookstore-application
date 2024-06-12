@@ -11,6 +11,7 @@ import {EBookCategory} from "../interfaces";
 import {FindAllBookDto} from "../dto/book/FindAllBookDto";
 import {ReplaceBookDto} from "../dto/book/ReplaceBookDto";
 import {RemoveBookDto} from "../dto/book/RemoveBookDto";
+import {UserRepository} from "../repository/UserRepository";
 
 export class BookService {
     private static _instance: BookService;
@@ -26,16 +27,20 @@ export class BookService {
         return this._instance;
     }
 
-    async createBook(session: ClientSession, dto: CreateBookDto): Promise<BookReplyDto> {
+    async createBook(session: ClientSession, dto: CreateBookDto, userId: string): Promise<BookReplyDto> {
         const authorRepo = AuthorRepository.instance;
         const bookRepo = BookRepository.instance;
+        const userRepo = UserRepository.instance;
+
+        const userCreator = await userRepo.findUserById(session, new ObjectId(userId));
+        check(userCreator, ApiMessages.BOOK.INVALID_USER);
 
         for (const authorId of dto.authorsIds) {
             const author = await authorRepo.findAuthorById(session, new ObjectId(authorId));
-            check(Boolean(author), ApiMessages.BOOK.AUTHOR_NOT_FOUND);
+            check(author, ApiMessages.BOOK.AUTHOR_NOT_FOUND);
         }
 
-        const bookModel = BookModel.create(dto);
+        const bookModel = BookModel.create(dto, userId);
 
         try {
             await bookRepo.createBook(session, bookModel);

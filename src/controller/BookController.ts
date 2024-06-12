@@ -51,7 +51,7 @@ export class BookController {
             check(Object.keys(EBookCategory).includes(category.toUpperCase()), ApiMessages.BOOK.INVALID_CATEGORY);
 
             const dto: BookReplyDto = await AppDb.instance.withTransaction((session) => {
-                return BookService.instance.createBook(session, request.body);
+                return BookService.instance.createBook(session, request.body, request.user.id);
             });
 
             reply.status(200).send(dto);

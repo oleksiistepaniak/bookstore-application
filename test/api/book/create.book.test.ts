@@ -6,7 +6,7 @@ import {
     dispose,
     getValidToken,
     init, setAuthor,
-    setUser, validCreateAuthorDto, validCreateAuthorDtoTwo,
+    setUser, validAuthenticationDto, validCreateAuthorDto, validCreateAuthorDtoTwo,
     validCreateUserDto
 } from "../../TestHelper";
 import {UserModel} from "../../../src/model/UserModel";
@@ -22,6 +22,7 @@ import {Constants} from "../../../src/constants";
 describe("create.book.test", () => {
     let app: FastifyInstance;
     let validToken: string;
+    let validUserId: string;
     let validAuthorId: ObjectId;
     let validAuthorIdTwo: ObjectId;
     let validCreateBookDto: CreateBookDto;
@@ -34,10 +35,11 @@ describe("create.book.test", () => {
         await clearAuthors();
         const userModel = UserModel.create(validCreateUserDto);
         await setUser(userModel);
-        const tokenReplyDto = await getValidToken();
+        const tokenReplyDto = await getValidToken(validAuthenticationDto);
         validToken = tokenReplyDto.token;
-        const firstAuthor = AuthorModel.create(validCreateAuthorDto);
-        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo);
+        validUserId = userModel.id.toString();
+        const firstAuthor = AuthorModel.create(validCreateAuthorDto, validUserId);
+        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo, validUserId);
         await setAuthor(firstAuthor);
         await setAuthor(secondAuthor);
         validAuthorId = firstAuthor.id;
@@ -450,6 +452,7 @@ describe("create.book.test", () => {
         should(reply.body).deepEqual({
             ...validCreateBookDto,
             id: reply.body.id,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
