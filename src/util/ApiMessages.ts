@@ -33,7 +33,7 @@ export const ApiMessages = {
         INVALID_AUTHOR_REPLACING: "invalid_author_replacing",
         AUTHOR_NOT_FOUND: "author_not_found",
         INVALID_AUTHOR_ID: "invalid_author_id",
-
+        INVALID_USER: "invalid_user",
     },
     BOOK: {
         TITLE_NOT_STRING: "title_not_string",

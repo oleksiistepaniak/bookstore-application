@@ -46,7 +46,7 @@ export class AuthorController {
             check(Object.keys(ENationality).includes(nationality.toUpperCase()), ApiMessages.AUTHOR.INVALID_NATIONALITY);
 
             const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
-                return AuthorService.instance.createAuthor(session, request.body);
+                return AuthorService.instance.createAuthor(session, request.body, request.user.id);
             });
 
             reply.status(200).send(dto);

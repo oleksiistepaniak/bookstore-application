@@ -16,6 +16,7 @@ export interface AuthorRecord {
     surname: string;
     nationality: ENationality;
     biography: string;
+    userCreatorId: ObjectId;
 }
 
 export interface BookRecord {
@@ -25,4 +26,5 @@ export interface BookRecord {
     numberOfPages: number;
     category: EBookCategory;
     authorsIds: ObjectId[];
+    userCreatorId: ObjectId;
 }

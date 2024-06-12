@@ -1,9 +1,3 @@
-import {FastifyRequest} from "fastify";
-
-export type TUserRequest = FastifyRequest & {
-    user?: { id: string };
-}
-
 export enum EBookCategory {
     FICTION = "Fiction",
     NON = "Non",

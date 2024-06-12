@@ -4,4 +4,5 @@ export interface AuthorReplyDto {
     surname: string;
     nationality: string;
     biography: string;
+    userCreatorId: string;
 }

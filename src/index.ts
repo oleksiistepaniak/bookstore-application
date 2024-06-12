@@ -37,3 +37,9 @@ async function main() {
 }
 
 main().then(result => result);
+
+declare module 'fastify' {
+    interface FastifyRequest {
+        user: { id: string };
+    }
+}

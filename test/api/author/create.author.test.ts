@@ -18,12 +18,14 @@ import {Constants} from "../../../src/constants";
 describe("create.author.test", () => {
     let app: FastifyInstance;
     let validToken: string;
+    let validUserId: string;
 
     before(async () => {
         app = await init();
         await clearUsers();
         const userModel = UserModel.create(validCreateUserDto);
         await setUser(userModel);
+        validUserId = userModel.id.toString();
         const tokenReplyDto = await getValidToken();
         validToken = tokenReplyDto.token;
     });
@@ -409,6 +411,7 @@ describe("create.author.test", () => {
        should(reply.body).deepEqual({
            ...validCreateAuthorDto,
            id: reply.body.id,
+           userCreatorId: validUserId,
        });
        should(reply.status).deepEqual(200);
     });

@@ -1,4 +1,4 @@
-import {ClientSession} from "mongodb";
+import {ClientSession, ObjectId} from "mongodb";
 import {AppDb} from "../db/AppDb";
 import {UserModel} from "../model/UserModel";
 
@@ -26,6 +26,13 @@ export class UserRepository {
 
         const user = await db.usersCollection.findOne({email}, {session});
 
+        return user ? new UserModel(user) : null;
+    }
+
+    async findUserById(session: ClientSession, id: ObjectId): Promise<UserModel | null> {
+        const db = AppDb.instance;
+
+        const user = await db.usersCollection.findOne({ _id: id }, { session });
         return user ? new UserModel(user) : null;
     }
 }

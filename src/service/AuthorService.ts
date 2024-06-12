@@ -9,6 +9,7 @@ import {ENationality} from "../interfaces";
 import {FindAllAuthorDto} from "../dto/author/FindAllAuthorDto";
 import {ReplaceAuthorDto} from "../dto/author/ReplaceAuthorDto";
 import {RemoveAuthorDto} from "../dto/author/RemoveAuthorDto";
+import {UserRepository} from "../repository/UserRepository";
 
 export class AuthorService {
     private static _instance: AuthorService;
@@ -24,10 +25,17 @@ export class AuthorService {
         return this._instance;
     }
 
-    async createAuthor(session: ClientSession, dto: CreateAuthorDto): Promise<AuthorReplyDto> {
+    async createAuthor(session: ClientSession, dto: CreateAuthorDto, userId: string): Promise<AuthorReplyDto> {
         const authorRepo = AuthorRepository.instance;
+        const userRepo = UserRepository.instance;
 
-        const authorModel = AuthorModel.create(dto);
+        const userCreator = await userRepo.findUserById(session, new ObjectId(userId));
+
+        if (!userCreator) {
+            throw new ApiError(ApiMessages.AUTHOR.INVALID_USER);
+        }
+
+        const authorModel = AuthorModel.create(dto, userId);
         try {
             await authorRepo.createAuthor(session, authorModel);
         } catch (error) {

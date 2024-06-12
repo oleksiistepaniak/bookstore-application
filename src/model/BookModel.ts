@@ -69,6 +69,7 @@ export class BookModel {
             numberOfPages: dto.numberOfPages,
             category: dto.category as unknown as EBookCategory,
             authorsIds: dto.authorsIds.map(it => new ObjectId(it)),
+            userCreatorId: new ObjectId()
         });
     }
 
