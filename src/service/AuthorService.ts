@@ -91,13 +91,16 @@ export class AuthorService {
         return foundAuthor.mapToDto();
     }
 
-    async removeAuthor(session: ClientSession, dto: RemoveAuthorDto): Promise<AuthorReplyDto> {
+    async removeAuthor(session: ClientSession, dto: RemoveAuthorDto, userId: string): Promise<AuthorReplyDto> {
         const authorRepo = AuthorRepository.instance;
+        const userRepo = UserRepository.instance;
+
+        const userRemover = await userRepo.findUserById(session, new ObjectId(userId));
+        check(userRemover, ApiMessages.AUTHOR.INVALID_USER);
 
         const foundAuthor = await authorRepo.findAuthorById(session, new ObjectId(dto.id));
-        if (!foundAuthor) {
-            throw new ApiError(ApiMessages.AUTHOR.AUTHOR_NOT_FOUND);
-        }
+        check(foundAuthor, ApiMessages.AUTHOR.AUTHOR_NOT_FOUND);
+        check(foundAuthor.userCreatorId === userRemover.id.toString(), ApiMessages.AUTHOR.INVALID_USER);
 
         await authorRepo.removeAuthor(session, foundAuthor);
         return foundAuthor.mapToDto();

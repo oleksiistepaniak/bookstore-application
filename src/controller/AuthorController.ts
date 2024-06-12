@@ -138,7 +138,7 @@ export class AuthorController {
             check(ObjectId.isValid(id), ApiMessages.AUTHOR.INVALID_AUTHOR_ID);
 
             const dto: AuthorReplyDto = await AppDb.instance.withTransaction((session) => {
-                return AuthorService.instance.removeAuthor(session, request.body);
+                return AuthorService.instance.removeAuthor(session, request.body, request.user.id);
             });
 
             reply.status(200).send(dto);

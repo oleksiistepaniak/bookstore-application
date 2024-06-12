@@ -5,9 +5,9 @@ import {
     getValidToken,
     init,
     setAuthor,
-    setUser,
+    setUser, validAuthenticationDto, validAuthenticationDtoTwo,
     validCreateAuthorDto,
-    validCreateUserDto
+    validCreateUserDto, validCreateUserDtoTwo
 } from "../../TestHelper";
 import {UserModel} from "../../../src/model/UserModel";
 import {AuthorModel} from "../../../src/model/AuthorModel";
@@ -17,21 +17,28 @@ import {ApiMessages} from "../../../src/util/ApiMessages";
 
 describe("remove.author.test", () => {
     let app: FastifyInstance;
-    let validToken: string;
+    let firstValidToken: string;
+    let secondValidToken: string;
+    let validUserId: string;
     let validAuthorId: string;
     const nonExistsAuthorId = "663d343828ab341641086570";
 
     before(async () => {
         app = await init();
         await clearUsers();
-        const userModel = UserModel.create(validCreateUserDto);
-        await setUser(userModel);
-        const tokenReplyDto = await getValidToken();
-        validToken = tokenReplyDto.token;
+        const firstUserModel = UserModel.create(validCreateUserDto);
+        await setUser(firstUserModel);
+        const secondUserModel = UserModel.create(validCreateUserDtoTwo);
+        await setUser(secondUserModel);
+        validUserId = firstUserModel.id.toString();
+        const firstTokenReply = await getValidToken(validAuthenticationDto);
+        firstValidToken = firstTokenReply.token;
+        const secondTokenReply = await getValidToken(validAuthenticationDtoTwo);
+        secondValidToken = secondTokenReply.token;
     });
 
     beforeEach(async () => {
-        const authorModel = AuthorModel.create(validCreateAuthorDto);
+        const authorModel = AuthorModel.create(validCreateAuthorDto, validUserId);
         await setAuthor(authorModel);
         validAuthorId = authorModel.id.toString();
     });
@@ -78,7 +85,7 @@ describe("remove.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/remove")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: "invalid_author_id",
             })
@@ -95,7 +102,7 @@ describe("remove.author.test", () => {
 
         const reply = await request(server)
             .post("/api/author/remove")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: nonExistsAuthorId,
             })
@@ -107,12 +114,29 @@ describe("remove.author.test", () => {
         should(reply.status).deepEqual(400);
     });
 
+    it("invalid user", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/author/remove")
+            .set("Authorization", `Bearer ${secondValidToken}`)
+            .send({
+                id: validAuthorId,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.AUTHOR.INVALID_USER,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
     it("success", async () => {
         const server = app.server;
 
         const reply = await request(server)
             .post("/api/author/remove")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validAuthorId,
             })
@@ -121,6 +145,7 @@ describe("remove.author.test", () => {
         should(reply.body).deepEqual({
             ...validCreateAuthorDto,
             id: validAuthorId,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
