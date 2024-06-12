@@ -7,9 +7,9 @@ import {
     clearUsers, dispose,
     getValidToken,
     init, setAuthor, setBook,
-    setUser,
+    setUser, validAuthenticationDto, validAuthenticationDtoTwo,
     validCreateAuthorDto, validCreateAuthorDtoTwo,
-    validCreateUserDto
+    validCreateUserDto, validCreateUserDtoTwo
 } from "../../TestHelper";
 import {UserModel} from "../../../src/model/UserModel";
 import {AuthorModel} from "../../../src/model/AuthorModel";
@@ -21,8 +21,10 @@ import {ApiMessages} from "../../../src/util/ApiMessages";
 
 describe("remove.book.test", () => {
     let app: FastifyInstance;
-    let validToken: string;
+    let firstValidToken: string;
+    let secondValidToken: string;
     let validBookId: ObjectId;
+    let validUserId: string;
     let validCreateBookDto: CreateBookDto;
     const nonExistsBookId = "663d343828ab341641086570";
 
@@ -31,15 +33,20 @@ describe("remove.book.test", () => {
         await clearUsers();
         await clearBooks();
         await clearAuthors();
-        const userModel = UserModel.create(validCreateUserDto);
-        await setUser(userModel);
-        const tokenReplyDto = await getValidToken();
-        validToken = tokenReplyDto.token;
+        const firstUser = UserModel.create(validCreateUserDto);
+        await setUser(firstUser);
+        const secondUser = UserModel.create(validCreateUserDtoTwo);
+        await setUser(secondUser);
+        validUserId = firstUser.id.toString();
+        const firstTokenReply = await getValidToken(validAuthenticationDto);
+        firstValidToken = firstTokenReply.token;
+        const secondTokenReply = await getValidToken(validAuthenticationDtoTwo);
+        secondValidToken = secondTokenReply.token;
     });
 
     beforeEach(async () => {
-        const firstAuthor = AuthorModel.create(validCreateAuthorDto);
-        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo);
+        const firstAuthor = AuthorModel.create(validCreateAuthorDto, validUserId);
+        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo, validUserId);
         await setAuthor(firstAuthor);
         await setAuthor(secondAuthor);
         validCreateBookDto = {
@@ -50,7 +57,7 @@ describe("remove.book.test", () => {
             numberOfPages: 354,
             authorsIds: [firstAuthor.id.toString(), secondAuthor.id.toString()],
         };
-        const bookModel = BookModel.create(validCreateBookDto);
+        const bookModel = BookModel.create(validCreateBookDto, validUserId);
         await setBook(bookModel);
         validBookId = bookModel.id;
     });
@@ -99,7 +106,7 @@ describe("remove.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/remove")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: "invalid_book_id",
             })
@@ -116,7 +123,7 @@ describe("remove.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/remove")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: nonExistsBookId,
             })
@@ -128,12 +135,29 @@ describe("remove.book.test", () => {
         should(reply.status).deepEqual(400);
     });
 
+    it("invalid user", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/remove")
+            .set("Authorization", `Bearer ${secondValidToken}`)
+            .send({
+                id: validBookId,
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.BOOK.INVALID_USER,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
     it("success", async () => {
         const server = app.server;
 
         const reply = await request(server)
             .post("/api/book/remove")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId.toString(),
             })
@@ -142,6 +166,7 @@ describe("remove.book.test", () => {
         should(reply.body).deepEqual({
             ...validCreateBookDto,
             id: validBookId.toString(),
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });

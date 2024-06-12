@@ -158,7 +158,7 @@ export class BookController {
             check(ObjectId.isValid(id), ApiMessages.BOOK.INVALID_BOOK_ID);
 
             const dto: BookReplyDto = await AppDb.instance.withTransaction((session) => {
-                return BookService.instance.removeBook(session, request.body);
+                return BookService.instance.removeBook(session, request.body, request.user.id);
             });
 
             reply.status(200).send(dto);

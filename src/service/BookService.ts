@@ -103,9 +103,7 @@ export class BookService {
             for (const authorId of dto.authorsIds) {
                 const id = new ObjectId(authorId);
                 const foundAuthor = await authorRepo.findAuthorById(session, id);
-                if (!foundAuthor) {
-                    throw new ApiError(ApiMessages.BOOK.AUTHOR_NOT_FOUND);
-                }
+                check(foundAuthor, ApiMessages.BOOK.AUTHOR_NOT_FOUND);
                 authorsIds.push(id);
             }
             foundBook.authorsIds = authorsIds;
@@ -115,13 +113,16 @@ export class BookService {
         return foundBook.mapToDto();
     }
 
-    async removeBook(session: ClientSession, dto: RemoveBookDto): Promise<BookReplyDto> {
+    async removeBook(session: ClientSession, dto: RemoveBookDto, userId: string): Promise<BookReplyDto> {
         const bookRepo = BookRepository.instance;
+        const userRepo = UserRepository.instance;
+
+        const userRemover = await userRepo.findUserById(session, new ObjectId(userId));
+        check(userRemover, ApiMessages.BOOK.INVALID_USER);
 
         const foundBook = await bookRepo.findBookById(session, new ObjectId(dto.id));
-        if (!foundBook) {
-            throw new ApiError(ApiMessages.BOOK.BOOK_NOT_FOUND);
-        }
+        check(foundBook, ApiMessages.BOOK.BOOK_NOT_FOUND);
+        check(foundBook.userCreatorId === userRemover.id.toString(), ApiMessages.BOOK.INVALID_USER);
 
         await bookRepo.removeBook(session, foundBook);
         return foundBook.mapToDto();
