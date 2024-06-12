@@ -7,6 +7,12 @@ import authenticationRoutes from "./route/UserRoutes";
 import authorRoutes from "./route/AuthorRoutes";
 import bookRoutes from "./route/BookRoutes";
 
+declare module 'fastify' {
+    interface FastifyRequest {
+        user: { id: string };
+    }
+}
+
 export const app = fastify({
     logger: true,
 });
@@ -37,9 +43,3 @@ async function main() {
 }
 
 main().then(result => result);
-
-declare module 'fastify' {
-    interface FastifyRequest {
-        user: { id: string };
-    }
-}

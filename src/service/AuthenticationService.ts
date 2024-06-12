@@ -11,6 +11,7 @@ import {AuthenticationDto} from "../dto/user/AuthenticationDto";
 import jwt from "jsonwebtoken";
 import {TokenReplyDto} from "../dto/user/TokenReplyDto";
 import {UserReplyDto} from "../dto/user/UserReplyDto";
+import {check} from "../util/ApiCheck";
 
 export class AuthenticationService {
     private static _instance: AuthenticationService;
@@ -52,16 +53,10 @@ export class AuthenticationService {
         const userRepo = UserRepository.instance;
 
         const user = await userRepo.findUserByEmail(session, userParams.email);
-
-        if (!user) {
-            throw new ApiError(ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL);
-        }
+        check(user, ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL);
 
         const isPasswordValid = await bcrypt.compare(userParams.password, user.password);
-
-        if (!isPasswordValid) {
-            throw new ApiError(ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL);
-        }
+        check(isPasswordValid, ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL);
 
         const token = jwt.sign({user: user.id.toString()}, conf.JWT_SECRET, {expiresIn: conf.JWT_EXPIRE});
         return { token };

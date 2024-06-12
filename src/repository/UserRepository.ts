@@ -33,6 +33,7 @@ export class UserRepository {
         const db = AppDb.instance;
 
         const user = await db.usersCollection.findOne({ _id: id }, { session });
+
         return user ? new UserModel(user) : null;
     }
 }
