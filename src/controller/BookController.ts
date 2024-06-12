@@ -138,7 +138,7 @@ export class BookController {
             }
 
             const dto: BookReplyDto = await AppDb.instance.withTransaction((session) => {
-                return BookService.instance.replaceBook(session, request.body);
+                return BookService.instance.replaceBook(session, request.body, request.user.id);
             });
 
             reply.status(200).send(dto);

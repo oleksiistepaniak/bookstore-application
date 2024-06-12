@@ -7,9 +7,9 @@ import {
     clearUsers, dispose,
     getValidToken,
     init, setAuthor, setBook,
-    setUser,
+    setUser, validAuthenticationDto, validAuthenticationDtoTwo,
     validCreateAuthorDto, validCreateAuthorDtoTwo,
-    validCreateUserDto
+    validCreateUserDto, validCreateUserDtoTwo
 } from "../../TestHelper";
 import {UserModel} from "../../../src/model/UserModel";
 import {AuthorModel} from "../../../src/model/AuthorModel";
@@ -22,10 +22,12 @@ import {Constants} from "../../../src/constants";
 
 describe("replace.book.test", () => {
     let app: FastifyInstance;
-    let validToken: string;
+    let firstValidToken: string;
+    let secondValidToken: string;
     let validAuthorId: ObjectId;
     let validAuthorIdTwo: ObjectId;
     let validBookId: ObjectId;
+    let validUserId: string;
     let validCreateBookDto: CreateBookDto;
     const nonExistsAuthorId = "663d343828ab341641086570";
 
@@ -34,15 +36,20 @@ describe("replace.book.test", () => {
         await clearUsers();
         await clearBooks();
         await clearAuthors();
-        const userModel = UserModel.create(validCreateUserDto);
-        await setUser(userModel);
-        const tokenReplyDto = await getValidToken();
-        validToken = tokenReplyDto.token;
+        const firstUser = UserModel.create(validCreateUserDto);
+        await setUser(firstUser);
+        const secondUser = UserModel.create(validCreateUserDtoTwo);
+        await setUser(secondUser);
+        validUserId = firstUser.id.toString();
+        const firstTokenReply = await getValidToken(validAuthenticationDto);
+        firstValidToken = firstTokenReply.token;
+        const secondTokenReply = await getValidToken(validAuthenticationDtoTwo);
+        secondValidToken = secondTokenReply.token;
     });
 
     beforeEach(async () => {
-        const firstAuthor = AuthorModel.create(validCreateAuthorDto);
-        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo);
+        const firstAuthor = AuthorModel.create(validCreateAuthorDto, validUserId);
+        const secondAuthor = AuthorModel.create(validCreateAuthorDtoTwo, validUserId);
         await setAuthor(firstAuthor);
         await setAuthor(secondAuthor);
         validAuthorId = firstAuthor.id;
@@ -55,7 +62,7 @@ describe("replace.book.test", () => {
             numberOfPages: 354,
             authorsIds: [validAuthorId.toString()],
         };
-        const bookModel = BookModel.create(validCreateBookDto);
+        const bookModel = BookModel.create(validCreateBookDto, validUserId);
         await setBook(bookModel);
         validBookId = bookModel.id;
     });
@@ -104,7 +111,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId.toString()
             })
@@ -121,7 +128,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId.toString(),
                 title: true,
@@ -139,7 +146,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId.toString(),
                 description: true,
@@ -157,7 +164,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId.toString(),
                 category: true,
@@ -175,7 +182,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId.toString(),
                 authorsIds: [null],
@@ -193,7 +200,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId.toString(),
                 numberOfPages: true,
@@ -211,7 +218,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: "invalid_book_id",
                 title: "a".repeat(Constants.BOOK.MIN_TITLE_LENGTH),
@@ -229,7 +236,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 title: "",
@@ -247,7 +254,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 description: "",
@@ -265,7 +272,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 category: "",
@@ -284,7 +291,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 title,
@@ -303,7 +310,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 title,
@@ -322,7 +329,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 title,
@@ -341,7 +348,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 description,
@@ -360,7 +367,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 description,
@@ -379,7 +386,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 description,
@@ -398,7 +405,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 category,
@@ -417,7 +424,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 numberOfPages,
@@ -436,7 +443,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 numberOfPages,
@@ -455,7 +462,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 authorsIds,
@@ -473,7 +480,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: nonExistsAuthorId,
                 title: "a".repeat(Constants.BOOK.MIN_TITLE_LENGTH),
@@ -491,7 +498,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 authorsIds: [nonExistsAuthorId],
@@ -504,13 +511,31 @@ describe("replace.book.test", () => {
         should(reply.status).deepEqual(400);
     });
 
+    it("invalid user", async () => {
+        const server = app.server;
+
+        const reply = await request(server)
+            .post("/api/book/replace")
+            .set("Authorization", `Bearer ${secondValidToken}`)
+            .send({
+                id: validBookId,
+                authorsIds: [validAuthorId],
+            })
+            .expect(400);
+
+        should(reply.body).deepEqual({
+            message: ApiMessages.BOOK.INVALID_USER,
+        });
+        should(reply.status).deepEqual(400);
+    });
+
     it("success with title", async () => {
         const server = app.server;
         const title = "a".repeat(Constants.BOOK.MIN_TITLE_LENGTH);
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 title,
@@ -521,6 +546,7 @@ describe("replace.book.test", () => {
             ...validCreateBookDto,
             id: reply.body.id,
             title,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -531,7 +557,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 description,
@@ -542,6 +568,7 @@ describe("replace.book.test", () => {
             ...validCreateBookDto,
             id: reply.body.id,
             description,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -552,7 +579,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 category,
@@ -563,6 +590,7 @@ describe("replace.book.test", () => {
             ...validCreateBookDto,
             id: reply.body.id,
             category,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -573,7 +601,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 numberOfPages,
@@ -584,6 +612,7 @@ describe("replace.book.test", () => {
             ...validCreateBookDto,
             id: reply.body.id,
             numberOfPages,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -594,7 +623,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 authorsIds,
@@ -605,6 +634,7 @@ describe("replace.book.test", () => {
             ...validCreateBookDto,
             id: reply.body.id,
             authorsIds,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -616,7 +646,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 title,
@@ -629,6 +659,7 @@ describe("replace.book.test", () => {
             id: reply.body.id,
             title,
             description,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -641,7 +672,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 title,
@@ -656,6 +687,7 @@ describe("replace.book.test", () => {
             title,
             description,
             authorsIds,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -667,7 +699,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 category,
@@ -680,6 +712,7 @@ describe("replace.book.test", () => {
             id: reply.body.id,
             category,
             numberOfPages,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -693,7 +726,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 category,
@@ -710,6 +743,7 @@ describe("replace.book.test", () => {
             numberOfPages,
             description,
             authorsIds,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });
@@ -724,7 +758,7 @@ describe("replace.book.test", () => {
 
         const reply = await request(server)
             .post("/api/book/replace")
-            .set("Authorization", `Bearer ${validToken}`)
+            .set("Authorization", `Bearer ${firstValidToken}`)
             .send({
                 id: validBookId,
                 category,
@@ -743,6 +777,7 @@ describe("replace.book.test", () => {
             description,
             authorsIds,
             title,
+            userCreatorId: validUserId,
         });
         should(reply.status).deepEqual(200);
     });

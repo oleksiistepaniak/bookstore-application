@@ -69,14 +69,17 @@ export class BookService {
         return books.map(it => it.mapToDto());
     }
 
-    async replaceBook(session: ClientSession, dto: ReplaceBookDto): Promise<BookReplyDto> {
+    async replaceBook(session: ClientSession, dto: ReplaceBookDto, userId: string): Promise<BookReplyDto> {
         const bookRepo = BookRepository.instance;
         const authorRepo = AuthorRepository.instance;
+        const userRepo = UserRepository.instance;
+
+        const userReplacer = await userRepo.findUserById(session, new ObjectId(userId));
+        check(userReplacer, ApiMessages.BOOK.INVALID_USER);
 
         const foundBook = await bookRepo.findBookById(session, new ObjectId(dto.id));
-        if (!foundBook) {
-            throw new ApiError(ApiMessages.BOOK.BOOK_NOT_FOUND);
-        }
+        check(foundBook, ApiMessages.BOOK.BOOK_NOT_FOUND);
+        check(foundBook.userCreatorId === userReplacer.id.toString(), ApiMessages.BOOK.INVALID_USER);
 
         if (dto.title) {
             foundBook.title = dto.title;
