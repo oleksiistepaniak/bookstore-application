@@ -1,31 +1,32 @@
 {
   "name": "bookstore-application",
   "version": "1.0.0",
-  "description": "",
+  "description": "A bookstore management application",
   "main": "index.ts",
   "scripts": {
     "start": "tsc && node dist/src/index.js",
     "test": "set IS_TEST=true&& mocha -r ts-node/register test/**/*.test.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Oleksii Stepaniak",
   "license": "ISC",
   "dependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.6",
-    "@types/mocha": "^10.0.6",
-    "@types/supertest": "^6.0.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "jsonwebtoken": "^9.0.2",
-    "mocha": "^10.4.0",
-    "mongodb": "^6.5.0",
-    "should": "^13.2.3",
-    "supertest": "^7.0.0",
-    "ts-node": "^10.9.2"
+    "mongodb": "^6.5.0"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7"
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.12.7",
+    "@types/supertest": "^6.0.2",
+    "mocha": "^10.8.2",
+    "should": "^13.2.3",
+    "supertest": "^7.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   }
 }
