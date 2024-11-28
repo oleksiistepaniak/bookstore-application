@@ -19,6 +19,7 @@ export class BookService {
     private constructor() {
     }
 
+    // TODO: all singletons as a replacer of DI should be altered using other solution
     public static get instance(): BookService {
         if (!this._instance) {
             this._instance = new BookService();

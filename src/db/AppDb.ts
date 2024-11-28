@@ -20,6 +20,7 @@ export class AppDb {
         this._booksCollection = this._db.collection("books");
     }
 
+    // TODO: all singletons as a replacer of DI should be altered using other solution
     public static get instance(): AppDb {
         if (!this._instance) {
             this._instance = new AppDb();

@@ -21,6 +21,7 @@ export class AppConf {
         app.log.info(`APP_PORT: ${this._APP_PORT}`);
     }
 
+    // TODO: all singletons as a replacer of DI should be altered using other solution
     public static get instance(): AppConf {
         if (!this._instance) {
             this._instance = new AppConf();

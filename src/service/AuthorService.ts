@@ -18,6 +18,7 @@ export class AuthorService {
     private constructor() {
     }
 
+    // TODO: all singletons as a replacer of DI should be altered using other solution
     public static get instance(): AuthorService {
         if (!this._instance) {
             this._instance = new AuthorService();
