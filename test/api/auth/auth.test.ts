@@ -48,7 +48,7 @@ describe("auth.test", () => {
             .expect(401);
 
         should(reply.body).deepEqual({
-            message: ApiMessages.USER.INVALID_PASSWORD_OR_EMAIL,
+            message: ApiMessages.USER.EMAIL_NOT_STRING,
         });
         should(reply.status).deepEqual(401);
     });
