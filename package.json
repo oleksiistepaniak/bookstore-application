@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "tsc && node dist/src/index.js",
-    "test": "cross-env set IS_TEST=true&& mocha -r ts-node/register test/**/*.test.ts"
+    "test": "cross-env IS_TEST=true mocha -r ts-node/register test/**/*.test.ts"
   },
   "keywords": [],
   "author": "Oleksii Stepaniak",
